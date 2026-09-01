@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+/*
+  Northline Dermatology — design tokens
+  Warm ivory ground, deep forest green, transitional serif set large,
+  tan accents, numbered section markers. Light theme only.
+*/
+
+:root {
+  /* Surfaces */
+  --paper: #fdfbf5;
+  --cream: #f7f2e7;
+  --cream-deep: #efe8d7;
+  --white: #ffffff;
+
+  /* Ink */
+  --ink: #23231f;
+  --ink-soft: #4c4b44;
+  --ink-faint: #78766c;
+
+  /* Brand green */
+  --green: #2b4a3a;
+  --green-deep: #1f3a2c;
+  --green-bright: #345a45;
+  --green-tint: #dde6dd;
+
+  /* Accent (terracotta / tan) */
+  --tan: #b5854f;
+  --tan-soft: #e6d5bd;
+
+  /* Lines & states */
+  --line: #e2d9c6;
+  --line-strong: #c9bc9f;
+  --danger: #9c3a2c;
+  --danger-tint: #f1ddd7;
+  --ok: #2f6d4f;
+  --ok-tint: #d7ecdf;
+  --warn: #86691c;
+  --warn-tint: #f0e6c3;
+
+  --focus: #345a45;
+
+  --radius: 3px;
+  --radius-lg: 8px;
+  --shell: 78rem;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
+  --color-white: var(--white);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-green: var(--green);
+  --color-green-deep: var(--green-deep);
+  --color-green-bright: var(--green-bright);
+  --color-green-tint: var(--green-tint);
+
+  --color-tan: var(--tan);
+  --color-tan-soft: var(--tan-soft);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-ok: var(--ok);
+  --color-ok-tint: var(--ok-tint);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-tint);
+
+  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia,
+    "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
+
+  --radius-DEFAULT: var(--radius);
+  --radius-lg: var(--radius-lg);
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    /* Serif-dominant, like the reference */
+    font-family: var(--font-serif);
+    font-size: 1.02rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    line-height: 1.08;
+  }
+
+  /* UI chrome uses the sans face */
+  button,
+  input,
+  select,
+  textarea,
+  .u-sans {
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background: var(--green);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.75rem;
+    }
+  }
+
+  /* Section index marker: 01 / 02 ... */
+  .section-index {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: var(--tan);
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* eyebrow preceded by a short tan rule, like the reference */
+  .eyebrow-rule {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .eyebrow-rule::before {
+    content: "";
+    width: 2.4rem;
+    height: 1px;
+    background: var(--tan);
+  }
+
+  .display {
+    font-family: var(--font-serif);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+
+  .prose-body {
+    color: var(--ink-soft);
+    line-height: 1.68;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.86rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0.72rem 1.35rem;
+    border-radius: var(--radius);
+    transition:
+      background-color 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--paper);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--green-deep);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+  .btn-outline:hover:not(:disabled) {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    padding-inline: 0.15rem;
+    text-underline-offset: 5px;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    text-decoration-color: var(--green);
+    color: var(--green);
+  }
+
+  /* text link with trailing arrow — the reference's primary hero CTA style */
+  .link-arrow {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: color 0.18s ease, border-color 0.18s ease, gap 0.18s ease;
+  }
+  .link-arrow:hover {
+    color: var(--green);
+    border-color: var(--green);
+    gap: 0.75rem;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+
+  .field-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .field {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 0.62rem 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .field::placeholder {
+    color: var(--ink-faint);
+  }
+  .field:focus {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+    border-color: var(--focus);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.24rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  .hairline {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+  }
+}
