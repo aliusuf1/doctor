@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -187,15 +188,23 @@ export default async function DoctorProfilePage({
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-28 lg:self-start">
-          <BookingWidget
-            slug={doctor.slug}
-            doctorName={doctor.full_name}
-            timezone={doctor.timezone}
-            feePkr={doctor.consultation_fee_pkr}
-            onlineEnabled={doctor.online_enabled}
-            inPersonEnabled={doctor.in_person_enabled}
-            onlinePaymentsEnabled={isConfigured.onlinePayments}
-          />
+          <Suspense
+            fallback={
+              <div className="card p-6 text-sm text-ink-faint">
+                Loading booking…
+              </div>
+            }
+          >
+            <BookingWidget
+              slug={doctor.slug}
+              doctorName={doctor.full_name}
+              timezone={doctor.timezone}
+              feePkr={doctor.consultation_fee_pkr}
+              onlineEnabled={doctor.online_enabled}
+              inPersonEnabled={doctor.in_person_enabled}
+              onlinePaymentsEnabled={isConfigured.onlinePayments}
+            />
+          </Suspense>
           <WaitlistButton
             slug={doctor.slug}
             defaultMode={doctor.online_enabled ? "online" : "in_person"}

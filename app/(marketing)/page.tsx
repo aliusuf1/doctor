@@ -3,7 +3,18 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/marketing/section";
 import { PhotoFrame } from "@/components/marketing/photo-frame";
 import { Marquee } from "@/components/marketing/marquee";
-import { CARE_AREAS, CLINICAL_NETWORK, HOW_IT_WORKS, site } from "@/lib/site";
+import { Accordion } from "@/components/marketing/accordion";
+import { NextAvailableStrip } from "@/components/marketing/next-available-strip";
+import { AvailabilityExplorer } from "@/components/marketing/availability-explorer";
+import { TriageWizard } from "@/components/marketing/triage-wizard";
+import {
+  CARE_AREAS,
+  CARE_AREA_DETAIL,
+  CLINICAL_NETWORK,
+  FAQ,
+  HOW_IT_WORKS,
+  site,
+} from "@/lib/site";
 import { listPublishedInsights } from "@/lib/data/insights";
 
 export const revalidate = 300;
@@ -46,7 +57,12 @@ export default async function HomePage() {
                 How it works
               </Link>
             </div>
-            <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-line-dark pt-6">
+
+            <div className="mt-8 border-t border-line-dark pt-6">
+              <NextAvailableStrip />
+            </div>
+
+            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-line-dark pt-6">
               {[
                 ["Online + in person", "Karachi clinic or video"],
                 ["Instant", "Live calendar, no callback"],
@@ -110,6 +126,14 @@ export default async function HomePage() {
         </ol>
       </Section>
 
+      {/* ── Availability explorer (interactive) ─────────────────────── */}
+      <Section
+        title="See when Dr. Sana is free"
+        lead="Her live calendar. Days with a dot have open times — pick one and it carries straight into booking."
+      >
+        <AvailabilityExplorer onlineEnabled inPersonEnabled />
+      </Section>
+
       {/* ── Meet Dr. Sana ───────────────────────────────────────────── */}
       <Section
         title="Meet Dr. Sana Siddiqui"
@@ -151,28 +175,63 @@ export default async function HomePage() {
         </div>
       </Section>
 
-      {/* ── Conditions ───────────────────────────────────────────────── */}
+      {/* ── Triage wizard (interactive) ────────────────────────────── */}
+      <Section
+        title="Not sure what it is?"
+        lead="Answer three quick questions. We'll suggest whether an online consultation fits and carry your answers into the booking."
+      >
+        <TriageWizard />
+      </Section>
+
+      {/* ── Conditions (interactive) ────────────────────────────────── */}
       <Section
         title="What we treat"
-        lead="Common skin, hair and nail concerns Dr. Sana assesses. Information supports — it does not replace — a consultation."
+        lead="Common skin, hair and nail concerns Dr. Sana assesses. Open one to see what a consultation covers. Information supports — it does not replace — a consultation."
       >
-        <div className="border-t border-line">
-          {CARE_AREAS.map((c) => (
-            <div
-              key={c.n}
-              className="group grid gap-1 border-b border-line py-5 md:grid-cols-[1fr_1.4fr] md:items-baseline md:gap-8"
-            >
-              <h3 className="display text-[1.4rem] font-bold transition-colors group-hover:text-flare md:text-[1.7rem]">
-                {c.title}
-              </h3>
-              <p className="prose-body text-[0.92rem]">{c.body}</p>
-            </div>
-          ))}
-        </div>
+        <Accordion
+          items={CARE_AREAS.map((c) => ({
+            key: c.n,
+            title: c.title,
+            content: (
+              <div>
+                <p>{c.body}</p>
+                <ul className="mt-3 space-y-1.5">
+                  {(CARE_AREA_DETAIL[c.n] ?? []).map((d) => (
+                    <li key={d} className="flex gap-2">
+                      <span className="mt-2 size-1 shrink-0 rounded-full bg-flare" />
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={site.bookHref}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-flare"
+                >
+                  Book about this <ArrowRight size={14} className="text-flare" />
+                </Link>
+              </div>
+            ),
+          }))}
+        />
         <p className="mt-5 text-sm text-ink-faint">
           Not sure where your concern fits? Describe it briefly when you book —
           Dr. Sana will assess it properly during the consultation.
         </p>
+      </Section>
+
+      {/* ── FAQ (interactive) ───────────────────────────────────────── */}
+      <Section
+        title="Questions, answered"
+        lead="The things people ask before booking their first consultation."
+      >
+        <Accordion
+          defaultOpen={FAQ[0].q}
+          items={FAQ.map((f) => ({
+            key: f.q,
+            title: f.q,
+            content: <p>{f.a}</p>,
+          }))}
+        />
       </Section>
 
       {/* ── Insights ─────────────────────────────────────────────────── */}

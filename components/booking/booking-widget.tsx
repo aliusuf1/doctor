@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DateTime } from "luxon";
 import { Loader2, Video, MapPin, CheckCircle2 } from "lucide-react";
 import { cn, formatPkr } from "@/lib/utils";
@@ -36,8 +36,20 @@ export function BookingWidget({
   onlinePaymentsEnabled,
 }: Props) {
   const router = useRouter();
+  const params = useSearchParams();
+  const wantedSlot = params.get("slot");
+  const wantedConcern = params.get("concern");
+  const wantedMode = params.get("mode");
+  const slotApplied = useRef(false);
+
   const [mode, setMode] = useState<Mode>(
-    onlineEnabled ? "online" : "in_person",
+    wantedMode === "in_person" && inPersonEnabled
+      ? "in_person"
+      : wantedMode === "online" && onlineEnabled
+        ? "online"
+        : onlineEnabled
+          ? "online"
+          : "in_person",
   );
   const [days, setDays] = useState<SlotDay[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +61,7 @@ export function BookingWidget({
     full_name: "",
     email: "",
     phone: "",
-    concern: "",
+    concern: wantedConcern ?? "",
     whatsapp_opt_in: true,
     consent: false,
     payment_method: onlinePaymentsEnabled
@@ -77,6 +89,19 @@ export function BookingWidget({
       .then((data: { days: SlotDay[] }) => {
         if (cancelled) return;
         setDays(data.days);
+
+        // Preselect a slot passed via ?slot=<iso> (once).
+        if (wantedSlot && !slotApplied.current) {
+          for (const d of data.days) {
+            const hit = d.slots.find((s) => s.start === wantedSlot);
+            if (hit) {
+              setActiveDate(d.date);
+              setSlot(hit);
+              slotApplied.current = true;
+              return;
+            }
+          }
+        }
         setActiveDate(data.days[0]?.date ?? null);
         setSlot(null);
       })

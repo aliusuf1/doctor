@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
-import { CARE_AREAS, site } from "@/lib/site";
+import { CARE_AREAS, CARE_AREA_DETAIL, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Conditions we assess",
@@ -9,38 +9,7 @@ export const metadata: Metadata = {
     "Common skin, hair and nail conditions assessed by dermatologists on Northline — acne, pigmentation, hair loss, eczema, psoriasis, skin infections and nail disorders.",
 };
 
-const DETAIL: Record<string, string[]> = {
-  "01": [
-    "Active inflammatory acne, comedonal acne and hormonal patterns.",
-    "Post-inflammatory pigmentation and early scarring.",
-    "Review of current products and prescription tolerance.",
-  ],
-  "02": [
-    "Distinguishing melasma from post-inflammatory and other pigmentation.",
-    "Identifying triggers: sun, heat, hormones and irritation.",
-    "Staged plans that respect how your skin tolerates actives.",
-  ],
-  "03": [
-    "Telogen effluvium, pattern hair loss and scalp inflammation.",
-    "Which blood tests and scalp assessments are actually useful.",
-    "Realistic timelines for regrowth and maintenance.",
-  ],
-  "04": [
-    "Flare plans for eczema and psoriasis you can follow at home.",
-    "Trigger identification and skin-barrier care.",
-    "When to step up to systemic treatment and referral.",
-  ],
-  "05": [
-    "Fungal, bacterial and viral skin presentations.",
-    "When a swab, scraping or culture changes management.",
-    "Clear guidance on contagion and household measures.",
-  ],
-  "06": [
-    "Changes in nail colour, thickness, separation and shape.",
-    "Fungal versus non-fungal causes.",
-    "When a nail sample or imaging is warranted.",
-  ],
-};
+const DETAIL = CARE_AREA_DETAIL;
 
 export default function ConditionsPage() {
   return (
