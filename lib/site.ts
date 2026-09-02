@@ -1,22 +1,22 @@
 /**
- * Brand + platform constants.
- *
- * "Northline Dermatology" is a PLACEHOLDER brand. To rebrand, change the values
- * here (and NEXT_PUBLIC_BRAND_NAME in the environment) — nothing else hard-codes
- * the name.
+ * Brand + site constants. This site is exclusively for Dr. Sana Siddiqui.
+ * `doctorSlug` is the seeded doctor record her booking page + calendar use.
  */
 export const site = {
-  name: process.env.NEXT_PUBLIC_BRAND_NAME || "Northline Dermatology",
-  shortName: "Northline",
-  tagline: "Evidence-led skin, hair and nail care — online and in clinic.",
+  name: process.env.NEXT_PUBLIC_BRAND_NAME || "Dr. Sana Siddiqui",
+  shortName: "Dr. Sana Siddiqui",
+  doctorSlug: "sana-siddiqui",
+  doctorCredentials: "MBBS, FCPS, SCE",
+  doctorTitle: "Consultant Dermatologist",
+  tagline: "Evidence-led skin, hair and nail care — online and in Karachi.",
   description:
-    "Book an online or in-person dermatology consultation with a verified specialist. Real-time availability, instant confirmation, secure video link.",
+    "Book an online or in-person dermatology consultation with Dr. Sana Siddiqui. Real-time availability, instant confirmation, secure video link.",
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   city: "Karachi",
   country: "Pakistan",
-  supportEmail: "care@northline.example",
+  supportEmail: "care@example.com",
+  bookHref: "/doctors/sana-siddiqui",
   nav: [
-    { label: "Find a specialist", href: "/doctors" },
     { label: "How it works", href: "/consultation" },
     { label: "Conditions", href: "/conditions" },
     { label: "Insights", href: "/insights" },
@@ -37,13 +37,6 @@ export const CLINICAL_NETWORK = [
   "Memon Medical Institute",
   "Abbasi Shaheed Hospital",
   "Karachi Medical & Dental College",
-  "Aga Khan University Hospital",
-  "Liaquat National Hospital",
-  "Dr. Plaza",
-  "National Medical Centre",
-  "Tabba Heart Institute",
-  "Ziauddin Hospital",
-  "South City Hospital",
 ] as const;
 
 export const CARE_AREAS = [

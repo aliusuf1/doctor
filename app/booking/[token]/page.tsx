@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DateTime } from "luxon";
-import { CheckCircle2, Clock, Video, MapPin } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Video, MapPin } from "lucide-react";
 import { hasSupabaseAdmin } from "@/lib/supabase/admin";
 import { loadAppointmentBundle } from "@/lib/data/appointments";
 import { ManagePanel } from "@/components/booking/manage-panel";
@@ -54,9 +54,15 @@ export default async function BookingManagePage({
   return (
     <main className="min-h-screen bg-cream py-12">
       <div className="shell max-w-xl">
-        <Link href="/" className="font-serif text-lg">
-          {site.name}
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft transition-colors hover:text-flare"
+          >
+            <ArrowLeft size={15} /> Back to homepage
+          </Link>
+          <span className="font-display text-sm font-bold">{site.name}</span>
+        </div>
 
         <div className="card mt-6 overflow-hidden">
           <div className="border-b border-line bg-cream-deep px-6 py-4">
@@ -155,6 +161,12 @@ export default async function BookingManagePage({
           cancellationNoticeHours={d.cancellation_notice_hours}
           startsAtIso={a.starts_at}
         />
+
+        <div className="mt-8 flex justify-center">
+          <Link href="/" className="btn btn-outline px-4 py-2 text-xs">
+            <ArrowLeft size={14} /> Back to homepage
+          </Link>
+        </div>
 
         <p className="mt-6 text-center text-xs text-ink-faint">
           {site.legal.notEmergency}

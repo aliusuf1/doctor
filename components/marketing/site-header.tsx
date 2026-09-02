@@ -39,9 +39,9 @@ export function SiteHeader() {
       <div className="shell flex items-center justify-between py-4">
         <Link
           href="/"
-          className="display text-[1.35rem] font-extrabold tracking-[-0.04em]"
+          className="display text-[1.15rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[1.3rem]"
         >
-          {site.shortName}
+          {site.name}
           <span className="text-flare">.</span>
         </Link>
 
@@ -59,17 +59,22 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
-          <Link href="/doctors" className="btn btn-primary px-4 py-2 text-[0.8rem]">
+          <Link
+            href={site.bookHref}
+            className="btn btn-primary px-4 py-2 text-[0.8rem]"
+          >
             Book a consultation
           </Link>
           <Link
             href="/dashboard"
             className={cn(
               "text-[0.78rem] font-semibold transition-opacity",
-              scrolled ? "opacity-80 hover:opacity-100" : "opacity-70 hover:opacity-100",
+              scrolled
+                ? "opacity-80 hover:opacity-100"
+                : "opacity-70 hover:opacity-100",
             )}
           >
-            Doctors
+            Clinic login
           </Link>
         </div>
 
@@ -102,7 +107,7 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            href="/doctors"
+            href={site.bookHref}
             className="btn btn-primary mt-2"
             onClick={() => setOpen(false)}
           >

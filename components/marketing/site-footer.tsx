@@ -5,11 +5,14 @@ export function SiteFooter() {
   return (
     <footer className="mt-auto bg-pine text-on-dark">
       <div className="shell py-16">
-        <div className="grid gap-12 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-[1.8fr_1fr_1fr]">
           <div>
-            <p className="display text-[2.4rem] font-extrabold leading-none tracking-[-0.04em]">
-              {site.shortName}
+            <p className="display text-[1.9rem] font-extrabold leading-[1.05] tracking-[-0.03em] md:text-[2.2rem]">
+              {site.name}
               <span className="text-flare">.</span>
+            </p>
+            <p className="mt-1 text-sm text-on-dark-faint">
+              {site.doctorTitle} · {site.city}
             </p>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-on-dark-soft">
               {site.tagline}
@@ -17,21 +20,18 @@ export function SiteFooter() {
           </div>
 
           <FooterCol
-            title="Care"
-            links={site.nav.map((n) => ({ label: n.label, href: n.href }))}
-          />
-          <FooterCol
-            title="Clinicians"
+            title="Explore"
             links={[
-              { label: "Join as a specialist", href: "/sign-up" },
-              { label: "Doctor login", href: "/dashboard" },
+              { label: "Book a consultation", href: site.bookHref },
+              ...site.nav.map((n) => ({ label: n.label, href: n.href })),
             ]}
           />
           <FooterCol
-            title="Legal"
+            title="Important"
             links={[
               { label: "Privacy notice", href: "/privacy" },
               { label: "Medical disclaimer", href: "/disclaimer" },
+              { label: "Clinic login", href: "/dashboard" },
             ]}
           />
         </div>

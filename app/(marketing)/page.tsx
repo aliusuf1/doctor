@@ -1,22 +1,22 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Section } from "@/components/marketing/section";
 import { PhotoFrame } from "@/components/marketing/photo-frame";
 import { Marquee } from "@/components/marketing/marquee";
 import { CARE_AREAS, CLINICAL_NETWORK, HOW_IT_WORKS, site } from "@/lib/site";
-import { listPublicDoctors } from "@/lib/data/doctors";
 import { listPublishedInsights } from "@/lib/data/insights";
-import { StarRating, VerifiedBadge, NextAvailable } from "@/components/ui/badges";
-import { formatPkr } from "@/lib/utils";
 
 export const revalidate = 300;
 
+const CREDENTIALS = [
+  "MBBS, FCPS and SCE (Dermatology)",
+  "Consultant Dermatologist, Memon Medical Institute",
+  "Assistant Professor of Dermatology",
+  "Clinical practice at Abbasi Shaheed Hospital",
+];
+
 export default async function HomePage() {
-  const [doctors, insights] = await Promise.all([
-    listPublicDoctors({ limit: 3 }),
-    listPublishedInsights({ limit: 3 }),
-  ]);
+  const insights = await listPublishedInsights({ limit: 3 });
 
   return (
     <>
@@ -24,20 +24,23 @@ export default async function HomePage() {
       <section className="bg-pine text-on-dark">
         <div className="shell grid items-center gap-10 py-12 md:grid-cols-[1.15fr_0.85fr] md:gap-14 md:py-16">
           <div className="intro">
-            <h1 className="display text-[clamp(2.7rem,7vw,5.2rem)] font-extrabold">
-              Specialist skin,
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-flare">
+              {site.doctorCredentials} · {site.city} &amp; online
+            </p>
+            <h1 className="display mt-4 text-[clamp(2.7rem,7vw,5.2rem)] font-extrabold">
+              Clear answers.
               <br />
-              hair &amp; nail care,
-              <br />
-              <span className="text-flare">booked in minutes.</span>
+              <span className="text-flare">Healthier skin.</span>
             </h1>
             <p className="mt-7 max-w-md text-[1.05rem] leading-relaxed text-on-dark-soft">
-              Choose a verified dermatologist, see the times they are genuinely
-              free, and get an instant confirmation with a secure video link.
+              Specialist care for skin, hair and nail concerns with Dr. Sana
+              Siddiqui — careful assessment, realistic expectations, and a plan
+              you can actually follow. See her real availability and book in
+              minutes.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-6">
-              <Link href="/doctors" className="btn btn-primary">
-                Find a specialist <ArrowRight size={16} />
+              <Link href={site.bookHref} className="btn btn-primary">
+                Book a consultation <ArrowRight size={16} />
               </Link>
               <Link href="/consultation" className="ulink">
                 How it works
@@ -45,7 +48,7 @@ export default async function HomePage() {
             </div>
             <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-line-dark pt-6">
               {[
-                ["Verified", "Credentials checked"],
+                ["Online + in person", "Karachi clinic or video"],
                 ["Instant", "Live calendar, no callback"],
                 ["Secure", "Google Meet auto-generated"],
               ].map(([t, d]) => (
@@ -63,8 +66,9 @@ export default async function HomePage() {
 
           <div>
             <PhotoFrame
-              label="dermatology consultation"
-              alt="A dermatology consultation"
+              src="/dr-sana.avif"
+              label="Dr. Sana Siddiqui"
+              alt="Dr. Sana Siddiqui, Consultant Dermatologist"
               tone="dark"
               ratio="4 / 5"
               priority
@@ -78,7 +82,7 @@ export default async function HomePage() {
       <div className="border-b border-line bg-paper-2 py-5">
         <div className="shell flex items-center gap-6">
           <span className="label shrink-0 text-flare">
-            Trusted clinical network
+            Trained &amp; practised at
           </span>
           <Marquee items={CLINICAL_NETWORK} className="min-w-0 flex-1" />
         </div>
@@ -106,10 +110,51 @@ export default async function HomePage() {
         </ol>
       </Section>
 
+      {/* ── Meet Dr. Sana ───────────────────────────────────────────── */}
+      <Section
+        title="Meet Dr. Sana Siddiqui"
+        lead="A consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow."
+      >
+        <div className="grid gap-8 md:grid-cols-[13rem_1fr] md:items-start">
+          <PhotoFrame
+            src="/dr-sana.avif"
+            label="Dr. Sana Siddiqui"
+            alt="Dr. Sana Siddiqui"
+            ratio="4 / 5"
+            className="w-full max-w-[13rem]"
+          />
+          <div>
+            <ul className="border-t border-line">
+              {CREDENTIALS.map((c) => (
+                <li
+                  key={c}
+                  className="flex gap-3 border-b border-line py-3 text-[0.95rem]"
+                >
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-flare" />
+                  {c}
+                </li>
+              ))}
+            </ul>
+            <blockquote className="mt-7 text-[1.15rem] font-medium leading-relaxed text-ink">
+              &ldquo;Good dermatology is not about promising overnight results.
+              It is the right diagnosis, a plan you understand, and steady
+              progress you can trust.&rdquo;
+            </blockquote>
+            <Link
+              href={site.bookHref}
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold"
+            >
+              See availability &amp; book{" "}
+              <ArrowRight size={15} className="text-flare" />
+            </Link>
+          </div>
+        </div>
+      </Section>
+
       {/* ── Conditions ───────────────────────────────────────────────── */}
       <Section
         title="What we treat"
-        lead="Common skin, hair and nail concerns our dermatologists assess. Information supports — it does not replace — a consultation."
+        lead="Common skin, hair and nail concerns Dr. Sana assesses. Information supports — it does not replace — a consultation."
       >
         <div className="border-t border-line">
           {CARE_AREAS.map((c) => (
@@ -126,73 +171,8 @@ export default async function HomePage() {
         </div>
         <p className="mt-5 text-sm text-ink-faint">
           Not sure where your concern fits? Describe it briefly when you book —
-          your dermatologist will assess it properly.
+          Dr. Sana will assess it properly during the consultation.
         </p>
-      </Section>
-
-      {/* ── Specialists ──────────────────────────────────────────────── */}
-      <Section
-        title="Book a verified specialist"
-        lead="Every dermatologist here manages their own calendar. What you see is genuinely open."
-      >
-        {doctors.length === 0 ? (
-          <div className="card p-8 text-sm text-ink-faint">
-            Specialists are being onboarded. Check back shortly, or{" "}
-            <Link href="/sign-up" className="font-semibold text-flare underline">
-              join as a specialist
-            </Link>
-            .
-          </div>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2">
-            {doctors.map((d) => (
-              <Link
-                key={d.slug}
-                href={`/doctors/${d.slug}`}
-                className="card card-hover flex flex-col p-5"
-              >
-                <div className="flex items-start gap-4">
-                  <PhotoFrame
-                    src={d.photo_url}
-                    label="specialist"
-                    alt={d.full_name}
-                    ratio="1 / 1"
-                    className="w-16 shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h3 className="display truncate text-lg font-bold">
-                      {d.full_name}
-                    </h3>
-                    <p className="truncate text-xs text-ink-faint">
-                      {d.credentials}
-                    </p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                      {d.rating_count > 0 && (
-                        <StarRating value={d.rating_avg} count={d.rating_count} />
-                      )}
-                      {d.verified && <VerifiedBadge compact />}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
-                  <NextAvailable
-                    iso={d.next_available_at}
-                    timezone={d.timezone}
-                  />
-                  <span className="text-xs font-semibold">
-                    {formatPkr(d.consultation_fee_pkr)}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-        <Link
-          href="/doctors"
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold"
-        >
-          Browse all specialists <ArrowRight size={15} className="text-flare" />
-        </Link>
       </Section>
 
       {/* ── Insights ─────────────────────────────────────────────────── */}
@@ -237,8 +217,8 @@ export default async function HomePage() {
             A clear diagnosis and a plan you can follow. Start today.
           </h2>
           <div className="flex flex-wrap gap-4">
-            <Link href="/doctors" className="btn btn-primary">
-              Find a specialist <ArrowRight size={16} />
+            <Link href={site.bookHref} className="btn btn-primary">
+              Book a consultation <ArrowRight size={16} />
             </Link>
             <Link href="/consultation" className="btn btn-on-dark">
               What to expect
