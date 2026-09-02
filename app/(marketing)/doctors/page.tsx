@@ -69,7 +69,7 @@ export default async function DoctorsPage({
     <>
       <section className="border-b border-line py-14 md:py-20">
         <div className="shell max-w-3xl">
-          <p className="eyebrow">Our specialists</p>
+          <p className="label">Our specialists</p>
           <h1 className="display mt-5 text-4xl md:text-6xl">
             Verified dermatologists, real availability.
           </h1>
@@ -142,7 +142,7 @@ export default async function DoctorsPage({
               <Link
                 key={d.slug}
                 href={`/doctors/${d.slug}`}
-                className="card group flex flex-col p-6 transition-colors hover:border-green"
+                className="card card-hover group flex flex-col p-6"
               >
                 <div className="flex items-center gap-3">
                   {d.photo_url ? (

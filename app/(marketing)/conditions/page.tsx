@@ -47,9 +47,8 @@ export default function ConditionsPage() {
     <>
       <section className="border-b border-line py-16 md:py-24">
         <div className="shell max-w-3xl">
-          <p className="eyebrow">Areas of care</p>
-          <h1 className="display mt-5 text-4xl md:text-6xl">
-            Care for the concerns that affect you.
+          <h1 className="display text-[clamp(2.4rem,6vw,4.5rem)] font-extrabold">
+            What we treat.
           </h1>
           <p className="prose-body mt-6 text-lg">
             An overview of the areas our dermatologists commonly assess. This

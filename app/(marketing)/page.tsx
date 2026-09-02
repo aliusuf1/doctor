@@ -1,13 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import { HeroPortrait } from "@/components/marketing/hero-portrait";
-import { initials } from "@/lib/utils";
-import { NumberedSection } from "@/components/marketing/numbered-section";
-import { ButtonLink } from "@/components/ui/button";
-import { CARE_AREAS, HOW_IT_WORKS, site } from "@/lib/site";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { Section } from "@/components/marketing/section";
+import { PhotoFrame } from "@/components/marketing/photo-frame";
+import { Marquee } from "@/components/marketing/marquee";
+import { CARE_AREAS, CLINICAL_NETWORK, HOW_IT_WORKS, site } from "@/lib/site";
 import { listPublicDoctors } from "@/lib/data/doctors";
 import { listPublishedInsights } from "@/lib/data/insights";
+import { StarRating, VerifiedBadge, NextAvailable } from "@/components/ui/badges";
+import { formatPkr } from "@/lib/utils";
 
 export const revalidate = 300;
 
@@ -19,44 +20,40 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-paper">
-        <div className="shell grid items-start gap-10 py-12 md:grid-cols-[1.05fr_0.95fr] md:items-center md:gap-10 md:py-16">
-          <div>
-            <span className="eyebrow eyebrow-rule">
-              Evidence-led dermatology · Karachi &amp; online
-            </span>
-            <h1 className="display mt-7 text-[3.4rem] leading-[0.98] sm:text-[4rem] md:text-[4.8rem]">
-              Clear answers.
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="bg-pine text-on-dark">
+        <div className="shell grid items-center gap-10 py-12 md:grid-cols-[1.15fr_0.85fr] md:gap-14 md:py-16">
+          <div className="intro">
+            <h1 className="display text-[clamp(2.7rem,7vw,5.2rem)] font-extrabold">
+              Specialist skin,
               <br />
-              <span className="italic text-green">Healthier skin.</span>
+              hair &amp; nail care,
+              <br />
+              <span className="text-flare">booked in minutes.</span>
             </h1>
-            <p className="prose-body mt-7 max-w-md text-[1.12rem]">
-              Specialist care for skin, hair and nail concerns — grounded in
-              careful assessment, realistic expectations and a plan built for
-              you. Book a verified dermatologist with real-time availability.
+            <p className="mt-7 max-w-md text-[1.05rem] leading-relaxed text-on-dark-soft">
+              Choose a verified dermatologist, see the times they are genuinely
+              free, and get an instant confirmation with a secure video link.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-7">
-              <Link href="/doctors" className="link-arrow">
-                Book a consultation <ArrowRight size={15} />
+            <div className="mt-9 flex flex-wrap items-center gap-6">
+              <Link href="/doctors" className="btn btn-primary">
+                Find a specialist <ArrowRight size={16} />
               </Link>
-              <Link
-                href="/consultation"
-                className="u-sans text-[0.9rem] text-ink-soft underline decoration-line-strong underline-offset-[5px] transition-colors hover:text-green hover:decoration-green"
-              >
-                How online consultation works
+              <Link href="/consultation" className="ulink">
+                How it works
               </Link>
             </div>
-
-            <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-line pt-6">
+            <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-line-dark pt-6">
               {[
-                ["Verified specialists", "Credentials checked before listing"],
-                ["Online + in person", "Convenient access, your choice"],
-                ["Instant confirmation", "Live calendar, not a callback"],
+                ["Verified", "Credentials checked"],
+                ["Instant", "Live calendar, no callback"],
+                ["Secure", "Google Meet auto-generated"],
               ].map(([t, d]) => (
                 <div key={t}>
-                  <dt className="u-sans text-[0.82rem] font-semibold">{t}</dt>
-                  <dd className="u-sans mt-1 text-[0.72rem] leading-snug text-ink-faint">
+                  <dt className="text-[0.85rem] font-semibold text-on-dark">
+                    {t}
+                  </dt>
+                  <dd className="mt-1 text-[0.72rem] leading-snug text-on-dark-faint">
                     {d}
                   </dd>
                 </div>
@@ -64,226 +61,190 @@ export default async function HomePage() {
             </dl>
           </div>
 
-          <div className="flex justify-center md:justify-end">
-            <HeroPortrait />
+          <div>
+            <PhotoFrame
+              label="dermatology consultation"
+              alt="A dermatology consultation"
+              tone="dark"
+              ratio="4 / 5"
+              priority
+              className="mx-auto w-full max-w-xs md:ml-auto md:mr-0"
+            />
           </div>
         </div>
       </section>
 
-      {/* Affiliations strip */}
-      <div className="border-y border-line bg-cream">
-        <div className="shell flex flex-wrap items-center gap-x-10 gap-y-2 py-4">
-          <span className="u-sans text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-tan">
-            Professional affiliations
+      {/* ── Trust strip (marquee) ───────────────────────────────────── */}
+      <div className="border-b border-line bg-paper-2 py-5">
+        <div className="shell flex items-center gap-6">
+          <span className="label shrink-0 text-flare">
+            Trusted clinical network
           </span>
-          {[
-            "Memon Medical Institute",
-            "Abbasi Shaheed Hospital",
-            "Karachi Medical & Dental College",
-          ].map((n) => (
-            <span
-              key={n}
-              className="u-sans text-[0.72rem] font-medium uppercase tracking-[0.12em] text-ink-faint"
-            >
-              {n}
-            </span>
-          ))}
+          <Marquee items={CLINICAL_NETWORK} className="min-w-0 flex-1" />
         </div>
       </div>
 
-      {/* 01 — Approach */}
-      <NumberedSection
-        index="01"
-        eyebrow="A measured approach"
-        title="Dermatology that begins with listening."
-        intro={
-          <>
-            <p>
-              Skin concerns affect comfort, confidence and everyday life. The
-              right plan starts by understanding the complete picture — not by
-              reaching for the quickest treatment.
-            </p>
-            <p className="mt-4">
-              Every specialist on {site.shortName} works the same way: assess
-              carefully, explain the options plainly, and agree on a realistic
-              course of care you can actually follow.
-            </p>
-          </>
-        }
-      />
-
-      {/* 02 — Areas of care */}
-      <NumberedSection
-        index="02"
-        eyebrow="Areas of care"
-        title="Care for the concerns that affect you."
-        intro="Common areas our dermatologists assess. This information supports — it does not replace — an individual medical consultation."
+      {/* ── How it works ─────────────────────────────────────────────── */}
+      <Section
+        title="How a consultation works"
+        lead="Three steps, no phone tag. The fee is shown before you commit to anything."
       >
-        <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {CARE_AREAS.map((c) => (
-            <div key={c.n} className="bg-paper p-6">
-              <span className="section-index">{c.n}</span>
-              <h3 className="mt-3 font-serif text-xl">{c.title}</h3>
-              <p className="prose-body mt-2 text-sm">{c.body}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 text-sm text-ink-faint">
-          Not sure where your concern fits? Describe it briefly when you request
-          an appointment.
-        </p>
-      </NumberedSection>
-
-      {/* 03 — Online consultation */}
-      <NumberedSection
-        index="03"
-        eyebrow="Online consultation"
-        title="A specialist opinion, wherever you are."
-        intro="Online consultation is a convenient first step for many visible skin concerns and follow-ups. Some conditions still need an in-person examination or procedure; your dermatologist will tell you when that applies."
-      >
-        <ol className="grid gap-6 sm:grid-cols-3">
+        <ol className="divide-y divide-line border-y border-line">
           {HOW_IT_WORKS.map((s) => (
-            <li key={s.n} className="card p-6">
-              <span className="grid size-8 place-items-center rounded-full bg-green text-paper text-sm">
+            <li key={s.n} className="flex gap-6 py-7">
+              <span className="display shrink-0 text-[2.4rem] font-extrabold leading-none text-flare">
                 {s.n}
               </span>
-              <h3 className="mt-4 font-serif text-lg">{s.title}</h3>
-              <p className="prose-body mt-2 text-sm">{s.body}</p>
+              <div>
+                <h3 className="display text-xl font-bold">{s.title}</h3>
+                <p className="prose-body mt-1.5 max-w-lg text-[0.95rem]">
+                  {s.body}
+                </p>
+              </div>
             </li>
           ))}
         </ol>
-        <div className="mt-8">
-          <ButtonLink href="/doctors">
-            Request online consultation <ArrowRight size={16} />
-          </ButtonLink>
-        </div>
-      </NumberedSection>
+      </Section>
 
-      {/* 04 — Featured specialists */}
-      <NumberedSection
-        index="04"
-        eyebrow="Our specialists"
-        title="Verified dermatologists, real availability."
-        intro="Each specialist manages their own calendar. What you see here is what is genuinely open."
+      {/* ── Conditions ───────────────────────────────────────────────── */}
+      <Section
+        title="What we treat"
+        lead="Common skin, hair and nail concerns our dermatologists assess. Information supports — it does not replace — a consultation."
+      >
+        <div className="border-t border-line">
+          {CARE_AREAS.map((c) => (
+            <div
+              key={c.n}
+              className="group grid gap-1 border-b border-line py-5 md:grid-cols-[1fr_1.4fr] md:items-baseline md:gap-8"
+            >
+              <h3 className="display text-[1.4rem] font-bold transition-colors group-hover:text-flare md:text-[1.7rem]">
+                {c.title}
+              </h3>
+              <p className="prose-body text-[0.92rem]">{c.body}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 text-sm text-ink-faint">
+          Not sure where your concern fits? Describe it briefly when you book —
+          your dermatologist will assess it properly.
+        </p>
+      </Section>
+
+      {/* ── Specialists ──────────────────────────────────────────────── */}
+      <Section
+        title="Book a verified specialist"
+        lead="Every dermatologist here manages their own calendar. What you see is genuinely open."
       >
         {doctors.length === 0 ? (
           <div className="card p-8 text-sm text-ink-faint">
             Specialists are being onboarded. Check back shortly, or{" "}
-            <Link href="/sign-up" className="underline">
+            <Link href="/sign-up" className="font-semibold text-flare underline">
               join as a specialist
             </Link>
             .
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2">
             {doctors.map((d) => (
               <Link
                 key={d.slug}
                 href={`/doctors/${d.slug}`}
-                className="card group p-6 transition-colors hover:border-green"
+                className="card card-hover flex flex-col p-5"
               >
-                <div className="flex items-center gap-3">
-                  {d.photo_url ? (
-                    <Image
-                      src={d.photo_url}
-                      alt={d.full_name}
-                      width={44}
-                      height={44}
-                      className="size-11 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="grid size-11 place-items-center rounded-full bg-green-tint font-serif text-green">
-                      {initials(d.full_name)}
-                    </span>
-                  )}
-                  <div>
-                    <h3 className="font-serif text-lg leading-tight">
+                <div className="flex items-start gap-4">
+                  <PhotoFrame
+                    src={d.photo_url}
+                    label="specialist"
+                    alt={d.full_name}
+                    ratio="1 / 1"
+                    className="w-16 shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <h3 className="display truncate text-lg font-bold">
                       {d.full_name}
                     </h3>
-                    <p className="text-xs text-ink-faint">{d.credentials}</p>
+                    <p className="truncate text-xs text-ink-faint">
+                      {d.credentials}
+                    </p>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                      {d.rating_count > 0 && (
+                        <StarRating value={d.rating_avg} count={d.rating_count} />
+                      )}
+                      {d.verified && <VerifiedBadge compact />}
+                    </div>
                   </div>
                 </div>
-                <p className="prose-body mt-4 line-clamp-3 text-sm">
-                  {d.headline}
-                </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm text-green group-hover:underline">
-                  View availability <ArrowRight size={14} />
-                </span>
+                <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
+                  <NextAvailable
+                    iso={d.next_available_at}
+                    timezone={d.timezone}
+                  />
+                  <span className="text-xs font-semibold">
+                    {formatPkr(d.consultation_fee_pkr)}
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
         )}
-        <div className="mt-8">
-          <ButtonLink href="/doctors" variant="outline">
-            Browse all specialists
-          </ButtonLink>
-        </div>
-      </NumberedSection>
+        <Link
+          href="/doctors"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold"
+        >
+          Browse all specialists <ArrowRight size={15} className="text-flare" />
+        </Link>
+      </Section>
 
-      {/* 05 — Insights */}
-      <NumberedSection
-        index="05"
-        eyebrow="Dermatology insights"
-        title="Useful answers, without the noise."
-        intro="Clear, medically reviewed guidance for common skin, hair and nail questions."
-      >
-        {insights.length === 0 ? (
-          <p className="text-sm text-ink-faint">Articles coming soon.</p>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-3">
+      {/* ── Insights ─────────────────────────────────────────────────── */}
+      {insights.length > 0 && (
+        <Section
+          title="Plain answers, no noise"
+          lead="Medically reviewed guidance for the questions people actually ask."
+        >
+          <ul className="border-t border-line">
             {insights.map((a) => (
-              <Link
-                key={a.slug}
-                href={`/insights/${a.slug}`}
-                className="card group p-6 transition-colors hover:border-green"
-              >
-                <span className="badge border-tan-soft text-tan">
-                  {a.category}
-                </span>
-                <h3 className="mt-3 font-serif text-lg leading-snug">
-                  {a.title}
-                </h3>
-                <p className="prose-body mt-2 line-clamp-3 text-sm">
-                  {a.excerpt}
-                </p>
-                <span className="mt-4 block text-xs text-ink-faint">
-                  {a.read_minutes} min read
-                </span>
-              </Link>
+              <li key={a.slug}>
+                <Link
+                  href={`/insights/${a.slug}`}
+                  className="group flex items-start justify-between gap-6 border-b border-line py-6"
+                >
+                  <div>
+                    <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-flare">
+                      {a.category}
+                    </span>
+                    <h3 className="display mt-1 text-[1.3rem] font-bold group-hover:underline">
+                      {a.title}
+                    </h3>
+                    <p className="prose-body mt-1 line-clamp-2 max-w-xl text-sm">
+                      {a.excerpt}
+                    </p>
+                  </div>
+                  <ArrowUpRight
+                    size={22}
+                    className="mt-1 shrink-0 text-ink-faint transition-colors group-hover:text-flare"
+                  />
+                </Link>
+              </li>
             ))}
-          </div>
-        )}
-      </NumberedSection>
+          </ul>
+        </Section>
+      )}
 
-      {/* 06 — CTA */}
-      <section className="border-t border-line bg-green py-20 text-paper md:py-28">
-        <div className="shell grid gap-8 md:grid-cols-[7rem_1fr] md:gap-14">
-          <span className="section-index">06</span>
-          <div>
-            <h2 className="display max-w-2xl text-3xl text-paper md:text-[2.6rem]">
-              Ready for a clearer way forward?
-            </h2>
-            <p className="mt-5 max-w-xl text-paper/80">
-              Choose a specialist, pick a time that genuinely works, and get
-              instant confirmation with a secure video link.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <ButtonLink
-                href="/doctors"
-                className="bg-paper text-green hover:bg-white"
-              >
-                Find a specialist <ArrowRight size={16} />
-              </ButtonLink>
-              <ButtonLink
-                href="/consultation"
-                variant="outline"
-                className="border-paper/40 text-paper hover:border-paper hover:text-paper"
-              >
-                What to expect
-              </ButtonLink>
-            </div>
-            <p className="mt-8 text-xs text-paper/60">{site.legal.notEmergency}</p>
+      {/* ── Closing CTA ──────────────────────────────────────────────── */}
+      <section className="bg-pine text-on-dark">
+        <div className="shell flex flex-col items-start gap-8 py-20 md:py-28">
+          <h2 className="display max-w-3xl text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold">
+            A clear diagnosis and a plan you can follow. Start today.
+          </h2>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/doctors" className="btn btn-primary">
+              Find a specialist <ArrowRight size={16} />
+            </Link>
+            <Link href="/consultation" className="btn btn-on-dark">
+              What to expect
+            </Link>
           </div>
+          <p className="text-xs text-on-dark-faint">{site.legal.notEmergency}</p>
         </div>
       </section>
     </>

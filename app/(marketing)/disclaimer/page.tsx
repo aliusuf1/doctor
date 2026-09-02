@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Medical disclaimer" };
 export default function DisclaimerPage() {
   return (
     <article className="shell max-w-2xl py-16 md:py-24">
-      <p className="eyebrow">Important</p>
+      <p className="label">Important</p>
       <h1 className="display mt-4 text-4xl">Medical disclaimer</h1>
       <p className="mt-3 text-sm text-ink-faint">
         Placeholder text — replace with your reviewed legal wording before

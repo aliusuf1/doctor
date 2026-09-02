@@ -17,7 +17,7 @@ export default async function InsightsPage() {
     <>
       <section className="border-b border-line py-16 md:py-24">
         <div className="shell max-w-3xl">
-          <p className="eyebrow">Dermatology insights</p>
+          <p className="label">Dermatology insights</p>
           <h1 className="display mt-5 text-4xl md:text-6xl">
             Useful answers, without the noise.
           </h1>

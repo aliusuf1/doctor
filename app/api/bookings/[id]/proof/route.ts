@@ -8,7 +8,14 @@ import { site } from "@/lib/site";
 export const dynamic = "force-dynamic";
 
 const MAX_BYTES = 6 * 1024 * 1024;
-const ALLOWED = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "application/pdf",
+];
+const ALLOWED_EXT = ["jpg", "jpeg", "png", "webp", "pdf"];
 const PROOF_BUCKET = "payment-proofs";
 
 /**
@@ -52,23 +59,32 @@ export async function POST(
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
+  if (file.size === 0) {
+    return NextResponse.json({ error: "That file looks empty." }, { status: 400 });
+  }
   if (file.size > MAX_BYTES) {
     return NextResponse.json({ error: "File too large (max 6 MB)" }, { status: 413 });
   }
-  if (!ALLOWED.includes(file.type)) {
+
+  const ext = file.name.split(".").pop()?.toLowerCase() || "";
+  const typeOk = !file.type || ALLOWED_TYPES.includes(file.type.toLowerCase());
+  const extOk = ALLOWED_EXT.includes(ext);
+  if (!typeOk && !extOk) {
     return NextResponse.json(
       { error: "Use a JPG, PNG, WEBP or PDF" },
       { status: 415 },
     );
   }
-
-  const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
-  const path = `${bundle.appointment.doctor_id}/${id}-${Date.now()}.${ext}`;
+  const safeExt = extOk ? ext : file.type === "application/pdf" ? "pdf" : "jpg";
+  const path = `${bundle.appointment.doctor_id}/${id}-${Date.now()}.${safeExt}`;
   const bytes = Buffer.from(await file.arrayBuffer());
 
   const { error: upErr } = await sb.storage
     .from(PROOF_BUCKET)
-    .upload(path, bytes, { contentType: file.type, upsert: true });
+    .upload(path, bytes, {
+      contentType: file.type || "application/octet-stream",
+      upsert: true,
+    });
   if (upErr) {
     return NextResponse.json(
       { error: `Upload failed: ${upErr.message}` },

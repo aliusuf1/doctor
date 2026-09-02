@@ -224,14 +224,15 @@ export function BookingWidget({
                 </div>
 
                 <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                  {activeDay?.slots.map((s) => {
+                  {activeDay?.slots.map((s, i) => {
                     const dt = DateTime.fromISO(s.start).setZone(timezone);
                     return (
                       <button
                         key={s.start}
                         type="button"
                         onClick={() => setSlot(s)}
-                        className="rounded border border-line-strong px-2 py-2 text-sm transition-colors hover:border-green hover:bg-green-tint"
+                        style={{ animationDelay: `${Math.min(i * 18, 260)}ms` }}
+                        className="pop-in rounded border border-line-strong px-2 py-2 text-sm transition-colors hover:border-green hover:bg-green-tint active:scale-95"
                       >
                         {dt.toFormat("h:mm a")}
                       </button>
@@ -335,10 +336,11 @@ export function BookingWidget({
             <fieldset className="space-y-2">
               <legend className="field-label">Payment method</legend>
               {onlinePaymentsEnabled && (
-                <label className="flex items-center gap-2 text-sm">
+                <label className="flex items-center gap-2.5 text-sm">
                   <input
                     type="radio"
                     name="pm"
+                    className="size-[17px] shrink-0 accent-flare"
                     checked={form.payment_method === "online"}
                     onChange={() =>
                       setForm((f) => ({ ...f, payment_method: "online" }))
@@ -347,10 +349,11 @@ export function BookingWidget({
                   Pay online now
                 </label>
               )}
-              <label className="flex items-center gap-2 text-sm">
+              <label className="flex items-center gap-2.5 text-sm">
                 <input
                   type="radio"
                   name="pm"
+                  className="size-[17px] shrink-0 accent-flare"
                   checked={form.payment_method === "bank_transfer"}
                   onChange={() =>
                     setForm((f) => ({
@@ -363,9 +366,10 @@ export function BookingWidget({
               </label>
             </fieldset>
 
-            <label className="flex items-start gap-2 text-xs text-ink-soft">
+            <label className="flex items-start gap-2.5 text-xs leading-relaxed text-ink-soft">
               <input
                 type="checkbox"
+                className="mt-0.5 size-[18px] shrink-0 accent-flare"
                 checked={form.whatsapp_opt_in}
                 onChange={(e) =>
                   setForm((f) => ({
@@ -377,9 +381,10 @@ export function BookingWidget({
               Send me appointment updates on WhatsApp.
             </label>
 
-            <label className="flex items-start gap-2 text-xs text-ink-soft">
+            <label className="flex items-start gap-2.5 text-xs leading-relaxed text-ink-soft">
               <input
                 type="checkbox"
+                className="mt-0.5 size-[18px] shrink-0 accent-flare"
                 checked={form.consent}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, consent: e.target.checked }))

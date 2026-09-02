@@ -29,6 +29,23 @@ export const site = {
   },
 } as const;
 
+/**
+ * Institutions shown in the "Trusted clinical network" marquee. Edit freely —
+ * this is site content, not a verified claim by the platform.
+ */
+export const CLINICAL_NETWORK = [
+  "Memon Medical Institute",
+  "Abbasi Shaheed Hospital",
+  "Karachi Medical & Dental College",
+  "Aga Khan University Hospital",
+  "Liaquat National Hospital",
+  "Dr. Plaza",
+  "National Medical Centre",
+  "Tabba Heart Institute",
+  "Ziauddin Hospital",
+  "South City Hospital",
+] as const;
+
 export const CARE_AREAS = [
   {
     n: "01",

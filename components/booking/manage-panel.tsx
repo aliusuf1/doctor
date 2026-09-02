@@ -146,16 +146,30 @@ export function ManagePanel({
             {bankDetails}
           </pre>
           <form onSubmit={uploadProof} className="mt-4 space-y-3">
-            <label className="field-label">Upload your payment receipt</label>
-            <input
-              type="file"
-              accept="image/*,application/pdf"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="block w-full text-sm"
-            />
+            <span className="field-label">Upload your payment receipt</span>
+
+            <label className="flex cursor-pointer items-center gap-3 rounded border border-dashed border-line-strong bg-white px-3 py-2.5 text-sm hover:border-flare">
+              <span className="btn btn-outline shrink-0 px-3 py-1.5 text-xs">
+                Choose file
+              </span>
+              <span className="truncate text-ink-soft">
+                {file ? file.name : "JPG, PNG, WEBP or PDF · up to 6 MB"}
+              </span>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,application/pdf,.jpg,.jpeg,.png,.webp,.pdf"
+                onChange={(e) => {
+                  setFile(e.target.files?.[0] ?? null);
+                  setError(null);
+                  setOk(null);
+                }}
+                className="hidden"
+              />
+            </label>
+
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary w-full"
               disabled={!file || busy === "proof"}
             >
               {busy === "proof" ? (
@@ -165,9 +179,16 @@ export function ManagePanel({
               )}
               {hasProof ? "Replace receipt" : "Upload receipt"}
             </button>
+
+            {!file && !hasProof && (
+              <p className="text-xs text-ink-faint">
+                Choose your receipt image above, then press upload.
+              </p>
+            )}
             {hasProof && (
               <p className="text-xs text-ok">
-                A receipt is on file and awaiting verification.
+                A receipt is on file and awaiting verification. You can replace it
+                above.
               </p>
             )}
           </form>

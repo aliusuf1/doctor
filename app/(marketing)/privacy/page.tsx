@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Privacy notice" };
 export default function PrivacyPage() {
   return (
     <article className="shell max-w-2xl py-16 md:py-24">
-      <p className="eyebrow">Important</p>
+      <p className="label">Important</p>
       <h1 className="display mt-4 text-4xl">Privacy notice</h1>
       <p className="mt-3 text-sm text-ink-faint">
         Placeholder text — replace with your reviewed legal wording before

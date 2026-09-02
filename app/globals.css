@@ -1,70 +1,79 @@
 @import "tailwindcss";
 
 /*
-  Northline Dermatology — design tokens
-  Warm ivory ground, deep forest green, transitional serif set large,
-  tan accents, numbered section markers. Light theme only.
+  Northline Dermatology — "Bold modern / design-led"
+  Near-black pine ground + warm off-white + one vermilion accent.
+  Oversized grotesk display (Bricolage), Inter for UI. Hairlines, squared
+  corners, framed photography. No eyebrows, no decorative section numbers.
 */
 
 :root {
-  /* Surfaces */
-  --paper: #fdfbf5;
-  --cream: #f7f2e7;
-  --cream-deep: #efe8d7;
+  /* Grounds */
+  --paper: #faf9f5;
+  --paper-2: #f0efe7;
+  --pine: #0e1e17;
+  --pine-2: #14261d;
   --white: #ffffff;
 
-  /* Ink */
-  --ink: #23231f;
-  --ink-soft: #4c4b44;
-  --ink-faint: #78766c;
+  /* Ink on light */
+  --ink: #14160f;
+  --ink-soft: #55584c;
+  --ink-faint: #82857a;
 
-  /* Brand green */
-  --green: #2b4a3a;
-  --green-deep: #1f3a2c;
-  --green-bright: #345a45;
-  --green-tint: #dde6dd;
+  /* Ink on dark */
+  --on-dark: #f4f3ee;
+  --on-dark-soft: #b7c2b9;
+  --on-dark-faint: #8a978c;
 
-  /* Accent (terracotta / tan) */
-  --tan: #b5854f;
-  --tan-soft: #e6d5bd;
+  /* Accent + secondary */
+  --flare: #ff5a36;
+  --flare-press: #e8451f;
+  --flare-tint: #ffe7df;
+  --moss: #3b6b52;
+  --moss-tint: #e6ede6;
 
-  /* Lines & states */
-  --line: #e2d9c6;
-  --line-strong: #c9bc9f;
-  --danger: #9c3a2c;
-  --danger-tint: #f1ddd7;
+  /* Lines + states */
+  --line: #ddd9cc;
+  --line-strong: #c7c2b0;
+  --line-dark: rgba(244, 243, 238, 0.16);
+  --danger: #b23a20;
+  --danger-tint: #f5e0d8;
   --ok: #2f6d4f;
-  --ok-tint: #d7ecdf;
-  --warn: #86691c;
-  --warn-tint: #f0e6c3;
+  --ok-tint: #dcece2;
+  --warn: #8a6a1c;
+  --warn-tint: #f1e6c4;
 
-  --focus: #345a45;
+  --focus: #ff5a36;
 
-  --radius: 3px;
-  --radius-lg: 8px;
-  --shell: 78rem;
+  --r: 3px;
+  --r-lg: 6px;
+  --shell: 80rem;
 }
 
 @theme inline {
   --color-paper: var(--paper);
-  --color-cream: var(--cream);
-  --color-cream-deep: var(--cream-deep);
+  --color-paper-2: var(--paper-2);
+  --color-pine: var(--pine);
+  --color-pine-2: var(--pine-2);
   --color-white: var(--white);
 
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-ink-faint: var(--ink-faint);
 
-  --color-green: var(--green);
-  --color-green-deep: var(--green-deep);
-  --color-green-bright: var(--green-bright);
-  --color-green-tint: var(--green-tint);
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-soft: var(--on-dark-soft);
+  --color-on-dark-faint: var(--on-dark-faint);
 
-  --color-tan: var(--tan);
-  --color-tan-soft: var(--tan-soft);
+  --color-flare: var(--flare);
+  --color-flare-press: var(--flare-press);
+  --color-flare-tint: var(--flare-tint);
+  --color-moss: var(--moss);
+  --color-moss-tint: var(--moss-tint);
 
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  --color-line-dark: var(--line-dark);
   --color-danger: var(--danger);
   --color-danger-tint: var(--danger-tint);
   --color-ok: var(--ok);
@@ -72,18 +81,30 @@
   --color-warn: var(--warn);
   --color-warn-tint: var(--warn-tint);
 
-  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia,
-    "Times New Roman", serif;
+  --font-display: var(--font-bricolage), "Arial Narrow", system-ui, sans-serif;
+  --font-serif: var(--font-bricolage), Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     sans-serif;
 
-  --radius-DEFAULT: var(--radius);
-  --radius-lg: var(--radius-lg);
+  --radius-DEFAULT: var(--r);
+  --radius-lg: var(--r-lg);
+
+  /* Back-compat aliases so pre-redesign components (dashboard, booking
+     widgets) keep resolving to the new palette. */
+  --color-green: var(--moss);
+  --color-green-deep: var(--pine);
+  --color-green-bright: var(--moss);
+  --color-green-tint: var(--moss-tint);
+  --color-cream: var(--paper-2);
+  --color-cream-deep: var(--paper-2);
+  --color-tan: var(--flare);
+  --color-tan-soft: var(--flare-tint);
 }
 
 @layer base {
   * {
     border-color: var(--line);
+    min-width: 0;
   }
 
   html {
@@ -94,10 +115,9 @@
   body {
     background-color: var(--paper);
     color: var(--ink);
-    /* Serif-dominant, like the reference */
-    font-family: var(--font-serif);
-    font-size: 1.02rem;
-    line-height: 1.62;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -106,30 +126,22 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    letter-spacing: -0.018em;
-    color: var(--ink);
-    line-height: 1.08;
-  }
-
-  /* UI chrome uses the sans face */
-  button,
-  input,
-  select,
-  textarea,
-  .u-sans {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: inherit;
+    text-wrap: balance;
   }
 
   ::selection {
-    background: var(--green);
-    color: var(--paper);
+    background: var(--flare);
+    color: var(--white);
   }
 
   :focus-visible {
     outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline-offset: 3px;
     border-radius: 2px;
   }
 
@@ -150,135 +162,163 @@
     width: 100%;
     max-width: var(--shell);
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: 1.25rem;
   }
-
   @media (min-width: 768px) {
     .shell {
-      padding-inline: 2.75rem;
+      padding-inline: 2.5rem;
     }
   }
 
-  /* Section index marker: 01 / 02 ... */
+  /* Oversized statement type. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+
+  /* Small uppercase label — sparingly, never as a heading kicker. */
+  .label,
+  .eyebrow,
   .section-index {
     font-family: var(--font-sans);
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
-    color: var(--tan);
-  }
-
-  .eyebrow {
-    font-family: var(--font-sans);
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-faint);
+    display: block;
   }
-
-  /* eyebrow preceded by a short tan rule, like the reference */
-  .eyebrow-rule {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.9rem;
-  }
-  .eyebrow-rule::before {
-    content: "";
-    width: 2.4rem;
-    height: 1px;
-    background: var(--tan);
-  }
-
-  .display {
-    font-family: var(--font-serif);
-    line-height: 1.02;
-    letter-spacing: -0.025em;
+  .section-index {
+    color: var(--flare);
+    letter-spacing: 0.18em;
   }
 
   .prose-body {
     color: var(--ink-soft);
-    line-height: 1.68;
+    line-height: 1.65;
   }
 
+  /* Buttons — squared, chunky, decisive. */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     font-family: var(--font-sans);
-    font-size: 0.86rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    padding: 0.72rem 1.35rem;
-    border-radius: var(--radius);
-    transition:
-      background-color 0.18s ease,
-      color 0.18s ease,
-      border-color 0.18s ease;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--r);
     cursor: pointer;
     text-decoration: none;
+    transition:
+      background-color 0.16s ease,
+      color 0.16s ease,
+      border-color 0.16s ease,
+      transform 0.1s ease;
   }
-
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
   .btn:disabled {
-    opacity: 0.55;
+    opacity: 0.5;
     cursor: not-allowed;
   }
-
   .btn-primary {
-    background: var(--green);
-    color: var(--paper);
+    background: var(--flare);
+    color: var(--white);
   }
   .btn-primary:hover:not(:disabled) {
-    background: var(--green-deep);
+    background: var(--flare-press);
   }
-
+  .btn-dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-dark:hover:not(:disabled) {
+    background: #000;
+  }
   .btn-outline {
     background: transparent;
     color: var(--ink);
-    border: 1px solid var(--line-strong);
+    border: 1.5px solid var(--ink);
   }
   .btn-outline:hover:not(:disabled) {
-    border-color: var(--green);
-    color: var(--green);
+    background: var(--ink);
+    color: var(--paper);
   }
-
-  .btn-ghost {
+  .btn-on-dark {
     background: transparent;
-    color: var(--ink);
-    padding-inline: 0.15rem;
-    text-underline-offset: 5px;
-    text-decoration: underline;
-    text-decoration-color: var(--line-strong);
+    color: var(--on-dark);
+    border: 1.5px solid var(--line-dark);
   }
-  .btn-ghost:hover:not(:disabled) {
-    text-decoration-color: var(--green);
-    color: var(--green);
+  .btn-on-dark:hover:not(:disabled) {
+    border-color: var(--on-dark);
   }
 
-  /* text link with trailing arrow — the reference's primary hero CTA style */
-  .link-arrow {
+  /* Text link with a moving underline. */
+  .ulink {
     font-family: var(--font-sans);
+    font-weight: 600;
     font-size: 0.9rem;
-    font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--ink);
-    border-bottom: 1px solid var(--ink);
+    gap: 0.4rem;
+    color: currentColor;
+    position: relative;
     padding-bottom: 2px;
-    transition: color 0.18s ease, border-color 0.18s ease, gap 0.18s ease;
   }
-  .link-arrow:hover {
-    color: var(--green);
-    border-color: var(--green);
-    gap: 0.75rem;
+  .ulink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--flare);
+    transform: scaleX(1);
+    transform-origin: right;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ulink:hover::after {
+    transform: scaleX(0);
   }
 
+  /* Cards — hairline, squared, quiet. */
   .card {
     background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
+    border-radius: var(--r);
+  }
+  .card-hover {
+    transition:
+      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.16s ease,
+      box-shadow 0.2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: var(--ink);
+    box-shadow: 0 18px 40px -26px rgba(14, 30, 23, 0.5);
+  }
+
+  /* Framed photo — 1px box, vermilion corner tick. */
+  .frame {
+    position: relative;
+    border: 1px solid currentColor;
+    background: var(--moss-tint);
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    right: -7px;
+    top: -7px;
+    width: 14px;
+    height: 14px;
+    background: var(--flare);
   }
 
   .field-label {
@@ -287,15 +327,14 @@
     font-size: 0.78rem;
     font-weight: 600;
     color: var(--ink-soft);
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
   }
-
   .field {
     width: 100%;
     background: var(--white);
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius);
-    padding: 0.62rem 0.8rem;
+    border-radius: var(--r);
+    padding: 0.65rem 0.8rem;
     font-family: var(--font-sans);
     font-size: 0.9rem;
     color: var(--ink);
@@ -316,8 +355,8 @@
     font-family: var(--font-sans);
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    padding: 0.24rem 0.55rem;
+    letter-spacing: 0.01em;
+    padding: 0.22rem 0.55rem;
     border-radius: 999px;
     border: 1px solid var(--line);
   }
@@ -327,4 +366,98 @@
     width: 100%;
     background: var(--line);
   }
+
+  /* Header scroll state handled in the component (React class toggle). */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 2px;
+    background: var(--flare);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover::after,
+  .nav-link[data-active="true"]::after {
+    transform: scaleX(1);
+  }
 }
+
+/* Motion (motion-safe only). Content is always visible by default. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wipe-up {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .intro > * {
+    opacity: 0;
+    animation: rise 0.66s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .intro > *:nth-child(1) {
+    animation-delay: 0.04s;
+  }
+  .intro > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+  .intro > *:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .intro > *:nth-child(4) {
+    animation-delay: 0.28s;
+  }
+  .intro > *:nth-child(5) {
+    animation-delay: 0.36s;
+  }
+
+  .wipe {
+    animation: wipe-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+  .pop-in {
+    opacity: 0;
+    animation: rise 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .marquee-track {
+    animation: marquee 42s linear infinite;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* .rise-in is intentionally a no-op: scroll-driven reveals proved fragile in
+   embedded/preview contexts and were hiding content. Sections are static. */
+

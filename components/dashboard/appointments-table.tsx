@@ -154,49 +154,55 @@ function RowItem({
               </div>
 
               <div className="space-y-3 text-sm">
-                {r.paymentMethod === "bank_transfer" && r.hasProof && (
-                  <button
-                    onClick={viewProof}
-                    className="btn btn-outline px-3 py-1.5 text-xs"
-                  >
-                    <FileText size={14} /> View receipt
-                  </button>
-                )}
-
-                {r.status === "pending_payment" && (
-                  <button
-                    disabled={pending}
-                    onClick={() => run(() => verifyPaymentAndConfirm(r.id))}
-                    className="btn btn-primary px-3 py-1.5 text-xs"
-                  >
-                    {pending && <Loader2 size={14} className="animate-spin" />}
-                    Mark paid &amp; confirm
-                  </button>
-                )}
-
-                {r.status === "confirmed" && (
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      disabled={pending}
-                      onClick={() => run(() => markStatus(r.id, "completed"))}
-                      className="btn btn-outline px-3 py-1.5 text-xs"
-                    >
-                      Completed
-                    </button>
-                    <button
-                      disabled={pending}
-                      onClick={() => run(() => markStatus(r.id, "no_show"))}
-                      className="btn btn-outline px-3 py-1.5 text-xs"
-                    >
-                      No-show
-                    </button>
+                {(r.status === "pending_payment" ||
+                  r.status === "confirmed" ||
+                  (r.paymentMethod === "bank_transfer" && r.hasProof)) && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    {r.paymentMethod === "bank_transfer" && r.hasProof && (
+                      <button
+                        onClick={viewProof}
+                        className="btn btn-outline h-9 shrink-0 px-3 text-xs"
+                      >
+                        <FileText size={14} /> View receipt
+                      </button>
+                    )}
+                    {r.status === "pending_payment" && (
+                      <button
+                        disabled={pending}
+                        onClick={() => run(() => verifyPaymentAndConfirm(r.id))}
+                        className="btn btn-primary h-9 shrink-0 px-3 text-xs"
+                      >
+                        {pending && (
+                          <Loader2 size={14} className="animate-spin" />
+                        )}
+                        Mark paid &amp; confirm
+                      </button>
+                    )}
+                    {r.status === "confirmed" && (
+                      <>
+                        <button
+                          disabled={pending}
+                          onClick={() => run(() => markStatus(r.id, "completed"))}
+                          className="btn btn-outline h-9 shrink-0 px-3 text-xs"
+                        >
+                          Mark completed
+                        </button>
+                        <button
+                          disabled={pending}
+                          onClick={() => run(() => markStatus(r.id, "no_show"))}
+                          className="btn btn-outline h-9 shrink-0 px-3 text-xs"
+                        >
+                          No-show
+                        </button>
+                      </>
+                    )}
                   </div>
                 )}
 
                 {r.mode === "online" && r.status !== "cancelled" && (
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <input
-                      className="field py-1 text-xs"
+                      className="field h-9 min-w-0 flex-1 py-0 text-xs"
                       placeholder="Meet / video link"
                       value={link}
                       onChange={(e) => setLink(e.target.value)}
@@ -204,7 +210,7 @@ function RowItem({
                     <button
                       disabled={pending}
                       onClick={() => run(() => setMeetLink(r.id, link))}
-                      className="btn btn-outline px-3 py-1.5 text-xs"
+                      className="btn btn-outline h-9 shrink-0 px-3 text-xs"
                     >
                       Save
                     </button>
@@ -212,9 +218,9 @@ function RowItem({
                 )}
 
                 {r.status !== "cancelled" && r.status !== "completed" && (
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <input
-                      className="field py-1 text-xs"
+                      className="field h-9 min-w-0 flex-1 py-0 text-xs"
                       placeholder="Cancellation reason"
                       value={cancelReason}
                       onChange={(e) => setCancelReason(e.target.value)}
@@ -222,7 +228,7 @@ function RowItem({
                     <button
                       disabled={pending}
                       onClick={() => run(() => doctorCancel(r.id, cancelReason))}
-                      className="btn btn-outline px-3 py-1.5 text-xs text-danger"
+                      className="btn btn-outline h-9 shrink-0 px-3 text-xs text-danger"
                     >
                       Cancel
                     </button>

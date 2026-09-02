@@ -155,7 +155,7 @@ export function AvailabilityEditor({
                         >
                           <input
                             type="time"
-                            className="field w-28 py-1"
+                            className="field w-36 min-w-36 px-2.5 py-1"
                             value={r.start_time}
                             onChange={(e) =>
                               updateRow(idx, { start_time: e.target.value })
@@ -164,7 +164,7 @@ export function AvailabilityEditor({
                           <span className="text-ink-faint">to</span>
                           <input
                             type="time"
-                            className="field w-28 py-1"
+                            className="field w-36 min-w-36 px-2.5 py-1"
                             value={r.end_time}
                             onChange={(e) =>
                               updateRow(idx, { end_time: e.target.value })
@@ -237,7 +237,7 @@ export function AvailabilityEditor({
                   </span>
                   <input
                     type="time"
-                    className="field w-28 py-1"
+                    className="field w-36 min-w-36 px-2.5 py-1"
                     value={ov.start_time}
                     onChange={(e) =>
                       setOv((s) => ({ ...s, start_time: e.target.value }))
@@ -250,7 +250,7 @@ export function AvailabilityEditor({
                   </span>
                   <input
                     type="time"
-                    className="field w-28 py-1"
+                    className="field w-36 min-w-36 px-2.5 py-1"
                     value={ov.end_time}
                     onChange={(e) =>
                       setOv((s) => ({ ...s, end_time: e.target.value }))
