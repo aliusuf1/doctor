@@ -3,21 +3,23 @@ import { site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-line bg-panel">
+    <footer className="mt-auto bg-forest text-panel-on-dark">
       <div className="shell grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-full border border-green/60 font-serif text-xs text-green">
+            <span className="grid size-10 place-items-center rounded-full border border-panel-on-dark/40 font-serif text-xs text-panel-on-dark">
               SS
             </span>
             <span className="leading-tight">
-              <span className="block font-serif text-forest">{site.name}</span>
-              <span className="block text-[0.56rem] font-bold uppercase tracking-[0.2em] text-ink-faint">
+              <span className="block font-serif text-white">{site.name}</span>
+              <span className="block text-[0.56rem] font-bold uppercase tracking-[0.2em] text-panel-on-dark/60">
                 {site.doctorTitle}
               </span>
             </span>
           </div>
-          <p className="prose-body mt-4 max-w-xs text-sm">{site.tagline}</p>
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-panel-on-dark/75">
+            {site.tagline}
+          </p>
         </div>
 
         <FooterCol
@@ -42,13 +44,13 @@ export function SiteFooter() {
           links={[
             { label: "Privacy notice", href: "/privacy" },
             { label: "Medical disclaimer", href: "/disclaimer" },
-            { label: "Clinic login", href: "/dashboard" },
+            { label: "Doctor login", href: "/dashboard" },
           ]}
         />
       </div>
 
-      <div className="border-t border-line">
-        <div className="shell flex flex-col gap-1 py-5 text-xs text-ink-faint md:flex-row md:items-center md:justify-between">
+      <div className="border-t border-line-on-dark">
+        <div className="shell flex flex-col gap-1 py-5 text-xs text-panel-on-dark/60 md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. {site.legal.notEmergency}
           </p>
@@ -68,13 +70,15 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h3 className="section-label">{title}</h3>
+      <h3 className="text-[0.625rem] font-bold uppercase tracking-[0.17em] text-tan">
+        {title}
+      </h3>
       <ul className="mt-4 space-y-2 text-sm">
         {links.map((l, i) => (
           <li key={`${l.href}-${i}`}>
             <Link
               href={l.href}
-              className="text-ink-soft transition-colors hover:text-green"
+              className="text-panel-on-dark/75 transition-colors hover:text-white"
             >
               {l.label}
             </Link>

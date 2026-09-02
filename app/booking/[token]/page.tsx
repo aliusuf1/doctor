@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle2, Clock, Video, MapPin } from "lucide-react";
 import { hasSupabaseAdmin } from "@/lib/supabase/admin";
 import { loadAppointmentBundle } from "@/lib/data/appointments";
 import { ManagePanel } from "@/components/booking/manage-panel";
+import { LiveStatus } from "@/components/booking/live-status";
 import { ReviewForm } from "@/components/booking/review-form";
 import { formatPkr } from "@/lib/utils";
 import { site } from "@/lib/site";
@@ -160,6 +161,18 @@ export default async function BookingManagePage({
           bankDetails={awaitingBank ? d.bank_details : null}
           cancellationNoticeHours={d.cancellation_notice_hours}
           startsAtIso={a.starts_at}
+        />
+
+        <LiveStatus
+          appointmentId={a.id}
+          token={token}
+          initial={{
+            status: a.status,
+            payment_status: a.payment_status,
+            has_link: Boolean(a.meet_link),
+            starts_at: a.starts_at,
+            updated_at: a.updated_at,
+          }}
         />
 
         <div className="mt-8 flex justify-center">

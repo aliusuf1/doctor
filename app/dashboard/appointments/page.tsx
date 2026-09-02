@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { getDoctorAccount } from "@/lib/data/doctor-account";
 import { supabaseAdmin, hasSupabaseAdmin } from "@/lib/supabase/admin";
 import { AppointmentsTable } from "@/components/dashboard/appointments-table";
+import { LiveAppointments } from "@/components/dashboard/live-appointments";
 import type { AppointmentRow, PatientRow } from "@/lib/db/types";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +25,7 @@ export default async function AppointmentsPage({
       : "upcoming";
 
   let rows: (AppointmentRow & { patient: PatientRow | null })[] = [];
+  let pulse = { total: 0, pending: 0, latest: null as string | null };
   if (hasSupabaseAdmin()) {
     const sb = supabaseAdmin();
     let q = sb
@@ -51,6 +53,32 @@ export default async function AppointmentsPage({
 
     const { data } = await q.limit(200);
     rows = (data ?? []) as typeof rows;
+
+    const [{ count }, { data: latest }, { count: pendingCount }] =
+      await Promise.all([
+        sb
+          .from("appointments")
+          .select("id", { count: "exact", head: true })
+          .eq("doctor_id", account.doctor.id),
+        sb
+          .from("appointments")
+          .select("updated_at")
+          .eq("doctor_id", account.doctor.id)
+          .order("updated_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+        sb
+          .from("appointments")
+          .select("id", { count: "exact", head: true })
+          .eq("doctor_id", account.doctor.id)
+          .eq("status", "pending_payment")
+          .eq("payment_status", "submitted"),
+      ]);
+    pulse = {
+      total: count ?? 0,
+      pending: pendingCount ?? 0,
+      latest: (latest?.updated_at as string | undefined) ?? null,
+    };
   }
 
   const tabs: { key: Filter; label: string }[] = [
@@ -62,7 +90,10 @@ export default async function AppointmentsPage({
 
   return (
     <div>
-      <h1 className="display text-3xl">Appointments</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="display text-3xl">Appointments</h1>
+        <LiveAppointments initial={pulse} />
+      </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {tabs.map((t) => (

@@ -5,6 +5,7 @@ import { getDoctorAccount } from "@/lib/data/doctor-account";
 import { supabaseAdmin, hasSupabaseAdmin } from "@/lib/supabase/admin";
 import { formatPkr } from "@/lib/utils";
 import { OnboardingForm } from "@/components/dashboard/onboarding-form";
+import { LiveAppointments } from "@/components/dashboard/live-appointments";
 import type { AppointmentRow } from "@/lib/db/types";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +40,7 @@ export default async function DashboardOverview() {
   let upcoming: AppointmentRow[] = [];
   let pendingPayment = 0;
   let history: Pick<AppointmentRow, "status" | "starts_at" | "fee_pkr">[] = [];
+  let pulse = { total: 0, pending: 0, latest: null as string | null };
   if (hasSupabaseAdmin()) {
     const sb = supabaseAdmin();
     const since = DateTime.now().minus({ weeks: 8 }).startOf("week").toISO()!;
@@ -66,6 +68,25 @@ export default async function DashboardOverview() {
     upcoming = (up ?? []) as AppointmentRow[];
     pendingPayment = count ?? 0;
     history = (hist ?? []) as typeof history;
+
+    const [{ count: total }, { data: latest }] = await Promise.all([
+      sb
+        .from("appointments")
+        .select("id", { count: "exact", head: true })
+        .eq("doctor_id", doctor.id),
+      sb
+        .from("appointments")
+        .select("updated_at")
+        .eq("doctor_id", doctor.id)
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
+    pulse = {
+      total: total ?? 0,
+      pending: pendingPayment,
+      latest: (latest?.updated_at as string | undefined) ?? null,
+    };
   }
 
   // 8-week rollup
@@ -94,11 +115,14 @@ export default async function DashboardOverview() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="display text-3xl">Overview</h1>
-        {!doctor.is_active && (
-          <span className="badge border-warn bg-warn-tint text-warn">
-            <AlertTriangle size={13} /> Listing paused
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {!doctor.is_active && (
+            <span className="badge border-warn bg-warn-tint text-warn">
+              <AlertTriangle size={13} /> Listing paused
+            </span>
+          )}
+          <LiveAppointments initial={pulse} />
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">

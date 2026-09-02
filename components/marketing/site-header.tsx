@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Lock, Menu, X } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -19,12 +19,21 @@ export function SiteHeader() {
           <span className="text-[0.6rem] font-bold uppercase tracking-[0.16em]">
             Online and in-person dermatology consultations
           </span>
-          <Link
-            href={site.bookHref}
-            className="hidden text-[0.6rem] font-bold uppercase tracking-[0.16em] underline underline-offset-4 hover:no-underline sm:block"
-          >
-            Request an appointment
-          </Link>
+          <div className="hidden items-center gap-6 sm:flex">
+            <Link
+              href={site.bookHref}
+              className="text-[0.6rem] font-bold uppercase tracking-[0.16em] underline underline-offset-4 hover:no-underline"
+            >
+              Request an appointment
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-[0.6rem] font-bold uppercase tracking-[0.16em] text-panel-on-dark/70 transition-colors hover:text-panel-on-dark"
+            >
+              <Lock size={10} />
+              Doctor login
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -58,12 +67,21 @@ export function SiteHeader() {
             ))}
           </nav>
 
-          <Link
-            href={site.bookHref}
-            className="hidden text-[0.82rem] font-semibold text-forest md:block"
-          >
-            Book consultation
-          </Link>
+          <div className="hidden items-center gap-6 md:flex">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1.5 text-[0.78rem] text-ink-faint transition-colors hover:text-green"
+            >
+              <Lock size={12} />
+              Doctor login
+            </Link>
+            <Link
+              href={site.bookHref}
+              className="text-[0.82rem] font-semibold text-forest"
+            >
+              Book consultation
+            </Link>
+          </div>
 
           <button
             type="button"
@@ -103,10 +121,11 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/dashboard"
-            className="py-2 text-sm text-ink-faint"
+            className="mt-1 inline-flex items-center gap-1.5 py-2 text-sm text-ink-faint"
             onClick={() => setOpen(false)}
           >
-            Clinic login
+            <Lock size={12} />
+            Doctor login
           </Link>
         </nav>
       </div>
