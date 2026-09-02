@@ -3,40 +3,52 @@ import { site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto bg-pine text-on-dark">
-      <div className="shell py-16">
-        <div className="grid gap-12 md:grid-cols-[1.8fr_1fr_1fr]">
-          <div>
-            <p className="display text-[1.9rem] font-extrabold leading-[1.05] tracking-[-0.03em] md:text-[2.2rem]">
-              {site.name}
-              <span className="text-flare">.</span>
-            </p>
-            <p className="mt-1 text-sm text-on-dark-faint">
-              {site.doctorTitle} · {site.city}
-            </p>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-on-dark-soft">
-              {site.tagline}
-            </p>
+    <footer className="mt-auto border-t border-line bg-panel">
+      <div className="shell grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="grid size-10 place-items-center rounded-full border border-green/60 font-serif text-xs text-green">
+              SS
+            </span>
+            <span className="leading-tight">
+              <span className="block font-serif text-forest">{site.name}</span>
+              <span className="block text-[0.56rem] font-bold uppercase tracking-[0.2em] text-ink-faint">
+                {site.doctorTitle}
+              </span>
+            </span>
           </div>
-
-          <FooterCol
-            title="Explore"
-            links={[
-              { label: "Book a consultation", href: site.bookHref },
-              ...site.nav.map((n) => ({ label: n.label, href: n.href })),
-            ]}
-          />
-          <FooterCol
-            title="Important"
-            links={[
-              { label: "Privacy notice", href: "/privacy" },
-              { label: "Medical disclaimer", href: "/disclaimer" },
-              { label: "Clinic login", href: "/dashboard" },
-            ]}
-          />
+          <p className="prose-body mt-4 max-w-xs text-sm">{site.tagline}</p>
         </div>
 
-        <div className="mt-14 flex flex-col gap-1 border-t border-line-dark pt-6 text-xs text-on-dark-faint md:flex-row md:items-center md:justify-between">
+        <FooterCol
+          title="Explore"
+          links={[
+            { label: "About", href: "/#about" },
+            { label: "Conditions", href: "/conditions" },
+            { label: "Online consultation", href: "/consultation" },
+            { label: "Insights", href: "/insights" },
+          ]}
+        />
+        <FooterCol
+          title="Appointments"
+          links={[
+            { label: "Online consultation", href: site.bookHref },
+            { label: "In-person visit", href: site.bookHref },
+            { label: `${site.city}, ${site.country}`, href: site.bookHref },
+          ]}
+        />
+        <FooterCol
+          title="Important"
+          links={[
+            { label: "Privacy notice", href: "/privacy" },
+            { label: "Medical disclaimer", href: "/disclaimer" },
+            { label: "Clinic login", href: "/dashboard" },
+          ]}
+        />
+      </div>
+
+      <div className="border-t border-line">
+        <div className="shell flex flex-col gap-1 py-5 text-xs text-ink-faint md:flex-row md:items-center md:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. {site.legal.notEmergency}
           </p>
@@ -56,15 +68,13 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h3 className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-on-dark-faint">
-        {title}
-      </h3>
-      <ul className="mt-4 space-y-2.5 text-sm">
-        {links.map((l) => (
-          <li key={l.href}>
+      <h3 className="section-label">{title}</h3>
+      <ul className="mt-4 space-y-2 text-sm">
+        {links.map((l, i) => (
+          <li key={`${l.href}-${i}`}>
             <Link
               href={l.href}
-              className="text-on-dark-soft transition-colors hover:text-on-dark"
+              className="text-ink-soft transition-colors hover:text-green"
             >
               {l.label}
             </Link>

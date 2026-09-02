@@ -18,8 +18,9 @@ export const site = {
   supportEmail: "care@example.com",
   bookHref: "/doctors/sana-siddiqui",
   nav: [
-    { label: "How it works", href: "/consultation" },
+    { label: "About", href: "/#about" },
     { label: "Conditions", href: "/conditions" },
+    { label: "Online consultation", href: "/consultation" },
     { label: "Insights", href: "/insights" },
   ],
   legal: {

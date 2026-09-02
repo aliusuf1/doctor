@@ -1,29 +1,24 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { Section } from "@/components/marketing/section";
-import { PhotoFrame } from "@/components/marketing/photo-frame";
-import { Marquee } from "@/components/marketing/marquee";
-import { Accordion } from "@/components/marketing/accordion";
-import { NextAvailableStrip } from "@/components/marketing/next-available-strip";
-import { AvailabilityExplorer } from "@/components/marketing/availability-explorer";
-import { TriageWizard } from "@/components/marketing/triage-wizard";
-import {
-  CARE_AREAS,
-  CARE_AREA_DETAIL,
-  CLINICAL_NETWORK,
-  FAQ,
-  HOW_IT_WORKS,
-  site,
-} from "@/lib/site";
+import { ArrowRight, Check } from "lucide-react";
+import { HeroPortrait } from "@/components/marketing/hero-portrait";
+import { Section, Accent } from "@/components/marketing/section";
+import { InsightArt } from "@/components/marketing/insight-art";
+import { CARE_AREAS, HOW_IT_WORKS, site } from "@/lib/site";
 import { listPublishedInsights } from "@/lib/data/insights";
 
 export const revalidate = 300;
 
 const CREDENTIALS = [
-  "MBBS, FCPS and SCE (Dermatology)",
-  "Consultant Dermatologist, Memon Medical Institute",
+  "MBBS, FCPS and SCE qualifications",
+  "Consultant at Memon Medical Institute",
   "Assistant Professor of Dermatology",
   "Clinical practice at Abbasi Shaheed Hospital",
+];
+
+const AFFILIATIONS = [
+  "Memon Medical Institute",
+  "Abbasi Shaheed Hospital",
+  "Karachi Medical & Dental College",
 ];
 
 export default async function HomePage() {
@@ -32,47 +27,48 @@ export default async function HomePage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="bg-pine text-on-dark">
-        <div className="shell grid items-center gap-10 py-12 md:grid-cols-[1.15fr_0.85fr] md:gap-14 md:py-16">
-          <div className="intro">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-flare">
-              {site.doctorCredentials} · {site.city} &amp; online
-            </p>
-            <h1 className="display mt-4 text-[clamp(2.7rem,7vw,5.2rem)] font-extrabold">
+      <section className="relative overflow-hidden">
+        {/* split ground: cream left, sage right */}
+        <div className="absolute inset-0 hidden md:block">
+          <div className="h-full w-1/2 bg-panel" />
+        </div>
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-mint/45 md:block" />
+
+        <div className="shell relative grid items-center gap-12 py-14 md:grid-cols-2 md:gap-10 md:py-20">
+          <div className="md:pr-10">
+            <span className="eyebrow eyebrow-rule">
+              Evidence-led dermatology • Karachi &amp; online
+            </span>
+            <h1 className="display mt-7 text-[3.2rem] leading-[0.9] sm:text-[4rem] md:text-[4.8rem]">
               Clear answers.
               <br />
-              <span className="text-flare">Healthier skin.</span>
+              <Accent>Healthier skin.</Accent>
             </h1>
-            <p className="mt-7 max-w-md text-[1.05rem] leading-relaxed text-on-dark-soft">
-              Specialist care for skin, hair and nail concerns with Dr. Sana
-              Siddiqui — careful assessment, realistic expectations, and a plan
-              you can actually follow. See her real availability and book in
-              minutes.
+            <p className="prose-body mt-7 max-w-md font-serif text-[1.1rem] leading-[1.55]">
+              Specialist care for skin, hair and nail concerns — grounded in
+              careful assessment, realistic expectations and a plan made for you.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-6">
-              <Link href={site.bookHref} className="btn btn-primary">
-                Book a consultation <ArrowRight size={16} />
+            <div className="mt-9 flex flex-wrap items-center gap-8">
+              <Link href={site.bookHref} className="link-arrow">
+                Book a consultation <ArrowRight size={15} />
               </Link>
               <Link href="/consultation" className="ulink">
-                How it works
+                How online consultation works
               </Link>
             </div>
 
-            <div className="mt-8 border-t border-line-dark pt-6">
-              <NextAvailableStrip />
-            </div>
-
-            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-line-dark pt-6">
+            <dl className="mt-14 grid max-w-xl grid-cols-3 border-t border-line-strong/60 pt-6">
               {[
-                ["Online + in person", "Karachi clinic or video"],
-                ["Instant", "Live calendar, no callback"],
-                ["Secure", "Google Meet auto-generated"],
-              ].map(([t, d]) => (
-                <div key={t}>
-                  <dt className="text-[0.85rem] font-semibold text-on-dark">
-                    {t}
-                  </dt>
-                  <dd className="mt-1 text-[0.72rem] leading-snug text-on-dark-faint">
+                ["MBBS, FCPS, SCE", "Specialist qualifications"],
+                ["Academic + clinical", "Teaching and patient care"],
+                ["Online + in person", "Convenient access"],
+              ].map(([t, d], i) => (
+                <div
+                  key={t}
+                  className={i > 0 ? "border-l border-line-strong/60 pl-5" : "pr-5"}
+                >
+                  <dt className="font-serif text-[0.95rem] text-forest">{t}</dt>
+                  <dd className="mt-1.5 text-[0.72rem] leading-snug text-ink-faint">
                     {d}
                   </dd>
                 </div>
@@ -80,212 +76,297 @@ export default async function HomePage() {
             </dl>
           </div>
 
-          <div>
-            <PhotoFrame
-              src="/dr-sana.avif"
-              label="Dr. Sana Siddiqui"
-              alt="Dr. Sana Siddiqui, Consultant Dermatologist"
-              tone="dark"
-              ratio="4 / 5"
-              priority
-              className="mx-auto w-full max-w-xs md:ml-auto md:mr-0"
-            />
+          <div className="flex justify-center md:justify-end">
+            <HeroPortrait />
           </div>
         </div>
       </section>
 
-      {/* ── Trust strip (marquee) ───────────────────────────────────── */}
-      <div className="border-b border-line bg-paper-2 py-5">
-        <div className="shell flex items-center gap-6">
-          <span className="label shrink-0 text-flare">
-            Trained &amp; practised at
-          </span>
-          <Marquee items={CLINICAL_NETWORK} className="min-w-0 flex-1" />
+      {/* ── Professional affiliations ───────────────────────────────── */}
+      <div className="border-y border-line bg-white">
+        <div className="shell flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-5">
+          <span className="section-label text-tan">Professional affiliations</span>
+          {AFFILIATIONS.map((n, i) => (
+            <span key={n} className="flex items-center gap-6">
+              {i > 0 && <span className="text-tan">•</span>}
+              <span className="font-serif text-[0.95rem] text-forest">{n}</span>
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* ── How it works ─────────────────────────────────────────────── */}
+      {/* ── 01 · A measured approach ────────────────────────────────── */}
       <Section
-        title="How a consultation works"
-        lead="Three steps, no phone tag. The fee is shown before you commit to anything."
+        id="about"
+        index="01"
+        label="A measured approach"
+        title={
+          <>
+            Dermatology that
+            <br />
+            begins with <Accent>listening.</Accent>
+          </>
+        }
+        lead={
+          <>
+            <p className="font-serif text-[1.15rem] leading-[1.5] text-ink">
+              Skin concerns can affect comfort, confidence and everyday life. The
+              right plan starts by understanding the complete picture — not by
+              reaching for the quickest treatment.
+            </p>
+            <p className="mt-4">
+              Dr. Sana combines academic expertise with clinical experience to
+              assess each concern carefully, explain the options clearly and
+              agree on a realistic course of care.
+            </p>
+            <Link href={site.bookHref} className="link-arrow mt-6">
+              Meet Dr. Sana <ArrowRight size={14} />
+            </Link>
+          </>
+        }
+      />
+
+      {/* ── 02 · Areas of care (dark) ──────────────────────────────── */}
+      <Section
+        tone="dark"
+        index="02"
+        label="Areas of care"
+        title={
+          <>
+            Care for the concerns that
+            <br />
+            affect <Accent dark>you.</Accent>
+          </>
+        }
+        lead="Browse the areas Dr. Sana assesses most often. This information supports — but does not replace — an individual medical consultation."
+        leadAlign="bottom"
       >
-        <ol className="divide-y divide-line border-y border-line">
-          {HOW_IT_WORKS.map((s) => (
-            <li key={s.n} className="flex gap-6 py-7">
-              <span className="display shrink-0 text-[2.4rem] font-extrabold leading-none text-flare">
-                {s.n}
+        <div className="grid border border-line-on-dark sm:grid-cols-2 lg:grid-cols-3">
+          {CARE_AREAS.map((c) => (
+            <Link
+              key={c.n}
+              href={`${site.bookHref}?concern=${encodeURIComponent(c.title)}`}
+              className="group flex min-h-[15rem] flex-col border-b border-r border-line-on-dark p-7 transition-colors last:border-b-0 hover:bg-white/[0.04]"
+            >
+              <span className="font-serif text-[0.8rem] text-tan">{c.n}</span>
+              <h3 className="mt-5 font-serif text-[1.3rem] text-white">
+                {c.title}
+              </h3>
+              <p className="mt-3 text-[0.82rem] leading-relaxed text-panel-on-dark/65">
+                {c.body}
+              </p>
+              <span className="mt-auto flex justify-end pt-6">
+                <span className="arrow-box">
+                  <ArrowRight size={14} />
+                </span>
               </span>
-              <div>
-                <h3 className="display text-xl font-bold">{s.title}</h3>
-                <p className="prose-body mt-1.5 max-w-lg text-[0.95rem]">
-                  {s.body}
-                </p>
-              </div>
-            </li>
+            </Link>
           ))}
-        </ol>
+        </div>
+        <p className="mt-8 text-center text-[0.85rem] text-panel-on-dark/70">
+          Not sure where your concern fits?{" "}
+          <Link
+            href={site.bookHref}
+            className="font-semibold text-white underline underline-offset-4"
+          >
+            Tell us briefly when requesting an appointment.
+          </Link>
+        </p>
       </Section>
 
-      {/* ── Availability explorer (interactive) ─────────────────────── */}
-      <Section
-        title="See when Dr. Sana is free"
-        lead="Her live calendar. Days with a dot have open times — pick one and it carries straight into booking."
-      >
-        <AvailabilityExplorer onlineEnabled inPersonEnabled />
-      </Section>
+      {/* ── 03 · Online consultation ───────────────────────────────── */}
+      <section className="border-t border-line bg-bg py-16 md:py-24">
+        <div className="shell grid items-center gap-12 md:grid-cols-2 md:gap-16">
+          {/* left: mint panel with dark card */}
+          <div className="relative grid place-items-center bg-mint/55 p-10 md:p-14">
+            <div className="absolute size-[19rem] rounded-full bg-white/45" />
+            <div className="relative w-full max-w-[17rem] bg-forest px-8 py-12 text-center">
+              <span className="text-[0.58rem] font-bold uppercase tracking-[0.18em] text-panel-on-dark/70">
+                Online consultation
+              </span>
+              <span className="mx-auto mt-8 grid size-[4.5rem] place-items-center rounded-full bg-panel-on-dark font-serif text-[1.5rem] text-forest">
+                SS
+              </span>
+              <p className="mt-8 font-serif text-[1.2rem] leading-snug text-white">
+                Private. Convenient.
+                <br />
+                Clinically focused.
+              </p>
+              <p className="mt-6 text-[0.72rem] text-panel-on-dark/70">
+                Connect from wherever you are.
+              </p>
+            </div>
+          </div>
 
-      {/* ── Meet Dr. Sana ───────────────────────────────────────────── */}
-      <Section
-        title="Meet Dr. Sana Siddiqui"
-        lead="A consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow."
-      >
-        <div className="grid gap-8 md:grid-cols-[13rem_1fr] md:items-start">
-          <PhotoFrame
-            src="/dr-sana.avif"
-            label="Dr. Sana Siddiqui"
-            alt="Dr. Sana Siddiqui"
-            ratio="4 / 5"
-            className="w-full max-w-[13rem]"
-          />
+          {/* right: copy + steps */}
           <div>
-            <ul className="border-t border-line">
-              {CREDENTIALS.map((c) => (
+            <div className="flex items-baseline gap-4">
+              <span className="section-index">03</span>
+              <span className="section-label">Online consultation</span>
+            </div>
+            <h2 className="display mt-5 text-[2.1rem] sm:text-[2.6rem]">
+              A specialist opinion,
+              <br />
+              <Accent>wherever you are.</Accent>
+            </h2>
+            <p className="prose-body mt-5 max-w-md text-[0.95rem]">
+              Online consultation is a convenient first step for many visible
+              skin concerns and for follow-ups. Some conditions still need an
+              in-person examination, procedure or investigation; Dr. Sana will
+              advise you when that is the case.
+            </p>
+
+            <ol className="mt-9 border-t border-line">
+              {HOW_IT_WORKS.map((s, i) => (
                 <li
-                  key={c}
-                  className="flex gap-3 border-b border-line py-3 text-[0.95rem]"
+                  key={s.n}
+                  className="flex items-start gap-4 border-b border-line py-5"
                 >
-                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-flare" />
+                  <span className="step-num">{i + 1}</span>
+                  <div>
+                    <h3 className="font-serif text-[1.05rem] text-forest">
+                      {s.title}
+                    </h3>
+                    <p className="prose-body mt-1 text-[0.85rem]">{s.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <Link href={site.bookHref} className="link-arrow mt-8">
+              Request online consultation <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 04 · Experience & credentials ──────────────────────────── */}
+      <section className="border-t border-line bg-panel py-16 md:py-24">
+        <div className="shell grid gap-12 md:grid-cols-2 md:gap-16">
+          <div>
+            <div className="flex items-baseline gap-4">
+              <span className="section-index">04</span>
+              <span className="section-label">Experience &amp; credentials</span>
+            </div>
+            <h2 className="display mt-5 text-[2.4rem] sm:text-[3.1rem]">
+              Academic rigour.
+              <br />
+              <Accent>Human care.</Accent>
+            </h2>
+            <p className="prose-body mt-6 max-w-md text-[0.95rem]">
+              Dr. Sana Siddiqui is a consultant dermatologist whose work spans
+              patient care and medical education. Her approach favours evidence,
+              clarity and treatment plans that patients can understand and
+              follow.
+            </p>
+
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+              {CREDENTIALS.map((c) => (
+                <li key={c} className="flex gap-2.5 text-[0.85rem] text-forest">
+                  <Check size={14} className="mt-0.5 shrink-0 text-tan" />
                   {c}
                 </li>
               ))}
             </ul>
-            <blockquote className="mt-7 text-[1.15rem] font-medium leading-relaxed text-ink">
-              &ldquo;Good dermatology is not about promising overnight results.
-              It is the right diagnosis, a plan you understand, and steady
-              progress you can trust.&rdquo;
-            </blockquote>
-            <Link
-              href={site.bookHref}
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold"
-            >
-              See availability &amp; book{" "}
-              <ArrowRight size={15} className="text-flare" />
-            </Link>
           </div>
+
+          {/* quote card */}
+          <figure className="self-start bg-green px-9 py-10 md:px-11 md:py-12">
+            <span className="block font-serif text-[2.4rem] leading-none text-tan">
+              &ldquo;
+            </span>
+            <blockquote className="mt-5 font-serif text-[1.3rem] italic leading-[1.45] text-white">
+              Good dermatology is not about promising overnight results. It is
+              about the right diagnosis, a plan you understand and steady
+              progress you can trust.
+            </blockquote>
+            <figcaption className="mt-6 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-panel-on-dark/70">
+              Dr. Sana Siddiqui
+            </figcaption>
+          </figure>
         </div>
-      </Section>
+      </section>
 
-      {/* ── Triage wizard (interactive) ────────────────────────────── */}
-      <Section
-        title="Not sure what it is?"
-        lead="Answer three quick questions. We'll suggest whether an online consultation fits and carry your answers into the booking."
-      >
-        <TriageWizard />
-      </Section>
-
-      {/* ── Conditions (interactive) ────────────────────────────────── */}
-      <Section
-        title="What we treat"
-        lead="Common skin, hair and nail concerns Dr. Sana assesses. Open one to see what a consultation covers. Information supports — it does not replace — a consultation."
-      >
-        <Accordion
-          items={CARE_AREAS.map((c) => ({
-            key: c.n,
-            title: c.title,
-            content: (
-              <div>
-                <p>{c.body}</p>
-                <ul className="mt-3 space-y-1.5">
-                  {(CARE_AREA_DETAIL[c.n] ?? []).map((d) => (
-                    <li key={d} className="flex gap-2">
-                      <span className="mt-2 size-1 shrink-0 rounded-full bg-flare" />
-                      {d}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={site.bookHref}
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-flare"
-                >
-                  Book about this <ArrowRight size={14} className="text-flare" />
-                </Link>
-              </div>
-            ),
-          }))}
-        />
-        <p className="mt-5 text-sm text-ink-faint">
-          Not sure where your concern fits? Describe it briefly when you book —
-          Dr. Sana will assess it properly during the consultation.
-        </p>
-      </Section>
-
-      {/* ── FAQ (interactive) ───────────────────────────────────────── */}
-      <Section
-        title="Questions, answered"
-        lead="The things people ask before booking their first consultation."
-      >
-        <Accordion
-          defaultOpen={FAQ[0].q}
-          items={FAQ.map((f) => ({
-            key: f.q,
-            title: f.q,
-            content: <p>{f.a}</p>,
-          }))}
-        />
-      </Section>
-
-      {/* ── Insights ─────────────────────────────────────────────────── */}
+      {/* ── 05 · Dermatology insights ──────────────────────────────── */}
       {insights.length > 0 && (
         <Section
-          title="Plain answers, no noise"
-          lead="Medically reviewed guidance for the questions people actually ask."
+          index="05"
+          label="Dermatology insights"
+          title={
+            <>
+              Useful answers, without
+              <br />
+              the <Accent>noise.</Accent>
+            </>
+          }
+          lead="Clear, medically reviewed guidance for common skin, hair and nail questions."
+          leadAlign="bottom"
         >
-          <ul className="border-t border-line">
-            {insights.map((a) => (
-              <li key={a.slug}>
-                <Link
-                  href={`/insights/${a.slug}`}
-                  className="group flex items-start justify-between gap-6 border-b border-line py-6"
-                >
-                  <div>
-                    <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-flare">
-                      {a.category}
-                    </span>
-                    <h3 className="display mt-1 text-[1.3rem] font-bold group-hover:underline">
-                      {a.title}
-                    </h3>
-                    <p className="prose-body mt-1 line-clamp-2 max-w-xl text-sm">
-                      {a.excerpt}
-                    </p>
-                  </div>
-                  <ArrowUpRight
-                    size={22}
-                    className="mt-1 shrink-0 text-ink-faint transition-colors group-hover:text-flare"
-                  />
-                </Link>
-              </li>
+          <div className="grid gap-8 md:grid-cols-3">
+            {insights.map((a, i) => (
+              <Link
+                key={a.slug}
+                href={`/insights/${a.slug}`}
+                className="group border-b border-line pb-6"
+              >
+                <InsightArt index={i} category={a.category} />
+                <p className="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-tan">
+                  {a.category} • {a.read_minutes} min read
+                </p>
+                <h3 className="mt-2.5 font-serif text-[1.35rem] leading-snug text-forest group-hover:text-green">
+                  {a.title}
+                </h3>
+                <p className="prose-body mt-2.5 text-[0.85rem]">{a.excerpt}</p>
+                <span className="link-arrow mt-5 text-[0.8rem]">
+                  Read the guide <ArrowRight size={13} />
+                </span>
+              </Link>
             ))}
-          </ul>
+          </div>
         </Section>
       )}
 
-      {/* ── Closing CTA ──────────────────────────────────────────────── */}
-      <section className="bg-pine text-on-dark">
-        <div className="shell flex flex-col items-start gap-8 py-20 md:py-28">
-          <h2 className="display max-w-3xl text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold">
-            A clear diagnosis and a plan you can follow. Start today.
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            <Link href={site.bookHref} className="btn btn-primary">
-              Book a consultation <ArrowRight size={16} />
-            </Link>
-            <Link href="/consultation" className="btn btn-on-dark">
-              What to expect
-            </Link>
-          </div>
-          <p className="text-xs text-on-dark-faint">{site.legal.notEmergency}</p>
+      {/* ── 06 · Request an appointment ────────────────────────────── */}
+      <Section
+        id="book"
+        tone="panel"
+        index="06"
+        label="Request an appointment"
+        title={
+          <>
+            Ready for a clearer
+            <br />
+            way <Accent>forward?</Accent>
+          </>
+        }
+        lead="Choose a time that genuinely works, see the consultation fee before you commit, and get an instant confirmation with a secure video link."
+        leadAlign="bottom"
+      >
+        <div className="grid gap-8 border-y border-line py-9 sm:grid-cols-3">
+          {[
+            [
+              "No diagnosis by form",
+              "Your concern is assessed during the consultation.",
+            ],
+            [
+              "Clear confirmation",
+              "Fee and logistics are shown before you book.",
+            ],
+            [
+              "Not for emergencies",
+              "Seek urgent local medical care when needed.",
+            ],
+          ].map(([t, d]) => (
+            <div key={t}>
+              <p className="font-serif text-[1.05rem] text-forest">{t}</p>
+              <p className="prose-body mt-1.5 text-[0.85rem]">{d}</p>
+            </div>
+          ))}
         </div>
-      </section>
+        <Link href={site.bookHref} className="btn btn-primary mt-9">
+          Book a consultation <ArrowRight size={15} />
+        </Link>
+      </Section>
     </>
   );
 }

@@ -2,97 +2,85 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 8);
-        ticking = false;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-40 transition-colors duration-200",
-        scrolled
-          ? "bg-paper text-[#2f6d4f] shadow-[0_1px_0_var(--color-line)]"
-          : "bg-pine text-on-dark",
-      )}
-    >
-      <div className="shell flex items-center justify-between py-4">
-        <Link
-          href="/"
-          className="display text-[1.15rem] font-extrabold leading-none tracking-[-0.03em] sm:text-[1.3rem]"
-        >
-          {site.name}
-          <span className="text-flare">.</span>
-        </Link>
-
-        <nav className="hidden items-center gap-9 md:flex">
-          {site.nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              data-active={pathname === item.href}
-              className="nav-link text-[0.82rem] font-semibold"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-4 md:flex">
+    <header className="sticky top-0 z-40">
+      {/* utility bar */}
+      <div className="bg-forest text-panel-on-dark">
+        <div className="shell flex items-center justify-between py-1.5">
+          <span className="text-[0.6rem] font-bold uppercase tracking-[0.16em]">
+            Online and in-person dermatology consultations
+          </span>
           <Link
             href={site.bookHref}
-            className="btn btn-primary px-4 py-2 text-[0.8rem]"
+            className="hidden text-[0.6rem] font-bold uppercase tracking-[0.16em] underline underline-offset-4 hover:no-underline sm:block"
           >
-            Book a consultation
-          </Link>
-          <Link
-            href="/dashboard"
-            className={cn(
-              "text-[0.78rem] font-semibold transition-opacity",
-              scrolled
-                ? "opacity-80 hover:opacity-100"
-                : "opacity-70 hover:opacity-100",
-            )}
-          >
-            Clinic login
+            Request an appointment
           </Link>
         </div>
+      </div>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          className="md:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={24} /> : <Menu size={24} />}
-        </button>
+      {/* main bar — translucent ivory */}
+      <div className="border-b border-line bg-bg/[0.94] backdrop-blur-sm">
+        <div className="shell flex items-center justify-between py-4">
+          <Link href="/" className="flex items-center gap-3">
+            <span className="grid size-11 place-items-center rounded-full border border-green/60 font-serif text-sm text-green">
+              SS
+            </span>
+            <span className="leading-tight">
+              <span className="block font-serif text-[1.1rem] text-forest">
+                {site.name}
+              </span>
+              <span className="block text-[0.58rem] font-bold uppercase tracking-[0.2em] text-ink-faint">
+                {site.doctorTitle}
+              </span>
+            </span>
+          </Link>
+
+          <nav className="hidden items-center gap-7 md:flex">
+            {site.nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                data-active={pathname === item.href}
+                className="nav-link text-[0.82rem] text-ink-soft transition-colors hover:text-green"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <Link
+            href={site.bookHref}
+            className="hidden text-[0.82rem] font-semibold text-forest md:block"
+          >
+            Book consultation
+          </Link>
+
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            className="text-forest md:hidden"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       <div
         className={cn(
-          "grid overflow-hidden bg-paper text-ink transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden",
-          open ? "grid-rows-[1fr] border-b border-line" : "grid-rows-[0fr]",
+          "grid overflow-hidden border-b border-line bg-bg transition-[grid-template-rows] duration-300 md:hidden",
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr] border-b-0",
         )}
       >
         <nav className="shell flex min-h-0 flex-col gap-1 py-3">
@@ -100,7 +88,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="py-2 text-sm font-semibold"
+              className="py-2 text-sm text-ink-soft"
               onClick={() => setOpen(false)}
             >
               {item.label}
@@ -111,14 +99,14 @@ export function SiteHeader() {
             className="btn btn-primary mt-2"
             onClick={() => setOpen(false)}
           >
-            Book a consultation
+            Book consultation
           </Link>
           <Link
             href="/dashboard"
-            className="py-2 text-sm font-semibold text-ink-faint"
+            className="py-2 text-sm text-ink-faint"
             onClick={() => setOpen(false)}
           >
-            Doctor login
+            Clinic login
           </Link>
         </nav>
       </div>

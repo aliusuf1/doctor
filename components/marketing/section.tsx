@@ -1,55 +1,109 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
+type Tone = "bg" | "panel" | "dark";
+
+const TONE: Record<Tone, string> = {
+  bg: "bg-bg border-line",
+  panel: "bg-panel border-line",
+  dark: "bg-forest border-line-on-dark text-panel-on-dark",
+};
+
 /**
- * A marketing section: a large self-carrying heading (no kicker), an optional
- * lead paragraph, then content. Two-column on desktop — heading left, body
- * right — so the scroll has structure without decorative numbering.
+ * Numbered marketing section. The eyebrow row (tan index + green label) sits
+ * above a two-column band: a large serif heading on the left, the lead
+ * paragraph on the right. Children run full width below.
  */
 export function Section({
+  index,
+  label,
   title,
   lead,
   children,
   id,
-  dark,
+  tone = "bg",
+  leadAlign = "top",
   className,
 }: {
+  index?: string;
+  label?: string;
   title: ReactNode;
   lead?: ReactNode;
   children?: ReactNode;
   id?: string;
-  dark?: boolean;
+  tone?: Tone;
+  leadAlign?: "top" | "bottom";
   className?: string;
 }) {
+  const dark = tone === "dark";
   return (
     <section
       id={id}
-      className={cn(
-        "border-t py-16 md:py-24",
-        dark
-          ? "border-line-dark bg-pine text-on-dark"
-          : "border-line bg-paper",
-        className,
-      )}
+      className={cn("border-t py-16 md:py-24", TONE[tone], className)}
     >
-      <div className="shell grid gap-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-14">
-        <div className="rise-in">
-          <h2 className="display text-[2.1rem] leading-[0.95] sm:text-[2.6rem] md:text-[3rem]">
+      <div className="shell">
+        {(index || label) && (
+          <div className="flex items-baseline gap-4">
+            {index ? <span className="section-index">{index}</span> : null}
+            {label ? (
+              <span
+                className={cn(
+                  "text-[0.625rem] font-bold uppercase tracking-[0.17em]",
+                  dark ? "text-panel-on-dark/70" : "text-green",
+                )}
+              >
+                {label}
+              </span>
+            ) : null}
+          </div>
+        )}
+
+        <div
+          className={cn(
+            "mt-6 grid gap-6 md:grid-cols-2 md:gap-16",
+            leadAlign === "bottom" ? "md:items-end" : "md:items-start",
+          )}
+        >
+          <h2
+            className={cn(
+              "display text-[2.2rem] sm:text-[2.8rem] md:text-[3.4rem]",
+              dark && "text-white",
+            )}
+          >
             {title}
           </h2>
           {lead ? (
-            <p
+            <div
               className={cn(
-                "mt-5 max-w-sm text-[1.02rem] leading-relaxed",
-                dark ? "text-on-dark-soft" : "text-ink-soft",
+                "max-w-md text-[0.95rem] leading-relaxed",
+                dark ? "text-panel-on-dark/75" : "text-ink-soft",
               )}
             >
               {lead}
-            </p>
+            </div>
           ) : null}
         </div>
-        <div className="rise-in min-w-0">{children}</div>
+
+        {children ? <div className="mt-12">{children}</div> : null}
       </div>
     </section>
+  );
+}
+
+/** Italic green accent used inside section headings. */
+export function Accent({
+  children,
+  dark,
+}: {
+  children: ReactNode;
+  dark?: boolean;
+}) {
+  return (
+    <em
+      className={cn("italic", dark ? "text-mint/70" : "text-green")}
+      style={{ fontStyle: "italic" }}
+    >
+      {children}
+    </em>
   );
 }
