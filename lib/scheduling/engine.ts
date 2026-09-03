@@ -2,7 +2,6 @@ import { DateTime, Interval } from "luxon";
 import type {
   AvailabilityOverrideRow,
   AvailabilityRuleRow,
-  ConsultationMode,
 } from "@/lib/db/types";
 
 export interface DoctorScheduleConfig {
@@ -36,15 +35,11 @@ function parseHms(t: string): { hour: number; minute: number } {
   return { hour: Number(h), minute: Number(m ?? 0) };
 }
 
-function ruleMatchesMode(rule: AvailabilityRuleRow, mode: ConsultationMode) {
-  return rule.mode === "both" || rule.mode === mode;
-}
-
 /**
  * Build the list of bookable slots for a doctor between `from` and `to`.
  *
  * Algorithm, per calendar day in the doctor's timezone:
- *   1. weekly `availability_rules` for that weekday (filtered by mode) → intervals
+ *   1. weekly `availability_rules` for that weekday → intervals
  *   2. add `extra` overrides for that date
  *   3. subtract `block` overrides (whole-day when no times given)
  *   4. slice each remaining interval into (slot_duration + buffer) steps
@@ -57,7 +52,6 @@ export function buildSlots(params: {
   rules: AvailabilityRuleRow[];
   overrides: AvailabilityOverrideRow[];
   busy: BusyInterval[];
-  mode: ConsultationMode;
   from: Date;
   to: Date;
   now?: Date;
@@ -67,7 +61,6 @@ export function buildSlots(params: {
     rules,
     overrides,
     busy,
-    mode,
     from,
     to,
     now = new Date(),
@@ -125,7 +118,6 @@ export function buildSlots(params: {
       for (const rule of rules) {
         if (rule.is_active === false) continue;
         if (rule.weekday !== weekdayLuxon) continue;
-        if (!ruleMatchesMode(rule, mode)) continue;
         const s = parseHms(rule.start_time);
         const e = parseHms(rule.end_time);
         const start = cursor.set(s);
@@ -194,7 +186,6 @@ export function isSlotBookable(params: {
   rules: AvailabilityRuleRow[];
   overrides: AvailabilityOverrideRow[];
   busy: BusyInterval[];
-  mode: ConsultationMode;
   slotStartIso: string;
   now?: Date;
 }): boolean {

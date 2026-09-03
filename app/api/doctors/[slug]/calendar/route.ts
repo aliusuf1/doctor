@@ -54,12 +54,12 @@ export async function GET(
           : ("CONFIRMED" as const),
       summary: `${a.status === "pending_payment" ? "(unpaid) " : ""}${
         a.patient?.full_name ?? "Patient"
-      } — ${a.mode === "online" ? "online" : "in person"}`,
+      } — online`,
       description:
         (a.concern ? `Concern: ${a.concern}\n` : "") +
         (a.patient?.email ? `${a.patient.email}\n` : "") +
         (a.meet_link ? `Meet: ${a.meet_link}\n` : ""),
-      location: a.mode === "online" ? (a.meet_link ?? "Online") : "In person",
+      location: a.meet_link ?? "Online",
     })),
   );
 

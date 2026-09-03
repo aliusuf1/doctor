@@ -18,7 +18,6 @@ function rule(
   weekday: number,
   start: string,
   end: string,
-  mode: AvailabilityRuleRow["mode"] = "both",
 ): AvailabilityRuleRow {
   return {
     id: `r-${weekday}-${start}`,
@@ -26,7 +25,6 @@ function rule(
     weekday,
     start_time: start,
     end_time: end,
-    mode,
     is_active: true,
     created_at: "2026-01-01T00:00:00Z",
   };
@@ -64,7 +62,6 @@ describe("buildSlots", () => {
       rules: [rule(1, "17:00", "19:00")],
       overrides: [],
       busy: [],
-      mode: "online",
       from,
       to,
       now,
@@ -82,7 +79,6 @@ describe("buildSlots", () => {
       rules: [rule(1, "17:00", "19:00")],
       overrides: [],
       busy: [],
-      mode: "online",
       from,
       to,
       now,
@@ -106,7 +102,6 @@ describe("buildSlots", () => {
           }).toUTC().toISO()!,
         },
       ],
-      mode: "online",
       from,
       to,
       now,
@@ -124,7 +119,6 @@ describe("buildSlots", () => {
       rules: [rule(1, "17:00", "19:00")],
       overrides: [override({ date: "2026-03-02", type: "block" })],
       busy: [],
-      mode: "online",
       from,
       to,
       now,
@@ -145,7 +139,6 @@ describe("buildSlots", () => {
         }),
       ],
       busy: [],
-      mode: "online",
       from,
       to,
       now,
@@ -167,26 +160,11 @@ describe("buildSlots", () => {
         }),
       ],
       busy: [],
-      mode: "online",
       from,
       to,
       now,
     });
     expect(days.find((d) => d.date === "2026-03-03")?.slots.length).toBe(2);
-  });
-
-  it("filters by consultation mode", () => {
-    const days = buildSlots({
-      config,
-      rules: [rule(1, "17:00", "19:00", "in_person")],
-      overrides: [],
-      busy: [],
-      mode: "online",
-      from,
-      to,
-      now,
-    });
-    expect(days.find((d) => d.date === "2026-03-02")).toBeUndefined();
   });
 });
 
@@ -204,7 +182,6 @@ describe("isSlotBookable", () => {
         rules: [rule(1, "17:00", "19:00")],
         overrides: [],
         busy: [],
-        mode: "online",
         slotStartIso: slotStart,
         now,
       }),
@@ -223,7 +200,6 @@ describe("isSlotBookable", () => {
         rules: [rule(1, "17:00", "19:00")],
         overrides: [],
         busy: [],
-        mode: "online",
         slotStartIso: bad,
         now,
       }),
@@ -237,7 +213,6 @@ describe("isSlotBookable", () => {
         rules: [rule(1, "17:00", "19:00")],
         overrides: [],
         busy: [{ start: slotStart, end: DateTime.fromISO(slotStart).plus({ minutes: 30 }).toISO()! }],
-        mode: "online",
         slotStartIso: slotStart,
         now,
       }),

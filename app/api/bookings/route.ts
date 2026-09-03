@@ -59,15 +59,9 @@ export async function POST(req: Request) {
       { status: 404 },
     );
   }
-  if (v.mode === "online" && !doctor.online_enabled) {
+  if (!doctor.online_enabled) {
     return NextResponse.json(
       { error: "This specialist is not offering online consultations." },
-      { status: 422 },
-    );
-  }
-  if (v.mode === "in_person" && !doctor.in_person_enabled) {
-    return NextResponse.json(
-      { error: "This specialist is not offering in-person visits." },
       { status: 422 },
     );
   }
@@ -87,7 +81,6 @@ export async function POST(req: Request) {
   // 2. re-check the slot server-side
   const check = await verifySlotBookable({
     doctorId: doctor.id,
-    mode: v.mode,
     slotStartIso: v.slot_start,
   });
   if (!check.ok) {
@@ -148,7 +141,6 @@ export async function POST(req: Request) {
       starts_at: start.toISO(),
       ends_at: end.toISO(),
       doctor_timezone: doctor.timezone,
-      mode: v.mode,
       status: "pending_payment",
       concern: v.concern || null,
       fee_pkr: doctor.consultation_fee_pkr,
@@ -171,11 +163,8 @@ export async function POST(req: Request) {
     );
   }
 
-  // 5. Google Meet (online only; degrades to null / standing link)
-  let current = appointment;
-  if (v.mode === "online") {
-    current = await attachMeet(appointment, doctor, patient);
-  }
+  // 5. Google Meet (degrades to null / standing link)
+  const current = await attachMeet(appointment, doctor, patient);
 
   // 6. notifications: patient ack + doctor alert (fire-and-forget)
   const ctx = templateCtx(current, doctor, patient);

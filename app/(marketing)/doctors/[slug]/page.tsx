@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, Video } from "lucide-react";
+import { ArrowLeft, Video } from "lucide-react";
 import { DateTime } from "luxon";
 import { BookingWidget } from "@/components/booking/booking-widget";
 import { WaitlistButton } from "@/components/booking/waitlist-button";
@@ -128,13 +128,6 @@ export default async function DoctorProfilePage({
                 <Video size={15} /> Online consultation
               </span>
             )}
-            {doctor.in_person_enabled && (
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin size={15} /> In person
-                {doctor.clinic_name ? ` — ${doctor.clinic_name}` : ""},{" "}
-                {doctor.city}
-              </span>
-            )}
             <span>Fee: {formatPkr(doctor.consultation_fee_pkr)}</span>
           </div>
 
@@ -201,14 +194,10 @@ export default async function DoctorProfilePage({
               timezone={doctor.timezone}
               feePkr={doctor.consultation_fee_pkr}
               onlineEnabled={doctor.online_enabled}
-              inPersonEnabled={doctor.in_person_enabled}
               onlinePaymentsEnabled={isConfigured.onlinePayments}
             />
           </Suspense>
-          <WaitlistButton
-            slug={doctor.slug}
-            defaultMode={doctor.online_enabled ? "online" : "in_person"}
-          />
+          <WaitlistButton slug={doctor.slug} />
         </aside>
       </div>
     </div>

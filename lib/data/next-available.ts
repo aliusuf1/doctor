@@ -9,8 +9,8 @@ import type {
 } from "@/lib/db/types";
 
 /**
- * Recompute `doctors.next_available_at` — the earliest bookable slot across
- * either consultation mode within the booking horizon. Call after availability
+ * Recompute `doctors.next_available_at` — the earliest bookable slot within
+ * the booking horizon. Call after availability
  * or appointments change. Cheap: one doctor, a bounded window.
  */
 export async function refreshNextAvailable(doctorId: string): Promise<void> {
@@ -20,7 +20,7 @@ export async function refreshNextAvailable(doctorId: string): Promise<void> {
   const { data: doctor } = await sb
     .from("doctors")
     .select(
-      "id, timezone, slot_duration_min, buffer_min, min_notice_hours, booking_horizon_days, online_enabled, in_person_enabled",
+      "id, timezone, slot_duration_min, buffer_min, min_notice_hours, booking_horizon_days, online_enabled",
     )
     .eq("id", doctorId)
     .maybeSingle<
@@ -33,7 +33,6 @@ export async function refreshNextAvailable(doctorId: string): Promise<void> {
         | "min_notice_hours"
         | "booking_horizon_days"
         | "online_enabled"
-        | "in_person_enabled"
       >
     >();
   if (!doctor) return;
@@ -72,24 +71,17 @@ export async function refreshNextAvailable(doctorId: string): Promise<void> {
     (b) => ({ start: b.starts_at, end: b.ends_at }),
   );
 
-  const modes: ("online" | "in_person")[] = [];
-  if (doctor.online_enabled) modes.push("online");
-  if (doctor.in_person_enabled) modes.push("in_person");
-
-  let earliest: string | null = null;
-  for (const mode of modes) {
-    const days = buildSlots({
-      config,
-      rules: (rules ?? []) as AvailabilityRuleRow[],
-      overrides: (overrides ?? []) as AvailabilityOverrideRow[],
-      busy: busyIntervals,
-      mode,
-      from,
-      to,
-    });
-    const first = days[0]?.slots[0]?.start ?? null;
-    if (first && (!earliest || first < earliest)) earliest = first;
-  }
+  const days = doctor.online_enabled
+    ? buildSlots({
+        config,
+        rules: (rules ?? []) as AvailabilityRuleRow[],
+        overrides: (overrides ?? []) as AvailabilityOverrideRow[],
+        busy: busyIntervals,
+        from,
+        to,
+      })
+    : [];
+  const earliest = days[0]?.slots[0]?.start ?? null;
 
   await sb
     .from("doctors")

@@ -61,7 +61,7 @@ export default async function HomePage() {
               {[
                 ["MBBS, FCPS, SCE", "Specialist qualifications"],
                 ["Academic + clinical", "Teaching and patient care"],
-                ["Online + in person", "Convenient access"],
+                ["Online consultations", "Convenient access"],
               ].map(([t, d], i) => (
                 <div
                   key={t}

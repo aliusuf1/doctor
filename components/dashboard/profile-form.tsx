@@ -47,7 +47,6 @@ export function ProfileForm({
     booking_horizon_days: String(doctor.booking_horizon_days ?? 30),
     cancellation_notice_hours: String(doctor.cancellation_notice_hours ?? 6),
     online_enabled: doctor.online_enabled ?? true,
-    in_person_enabled: doctor.in_person_enabled ?? true,
     bank_details: doctor.bank_details ?? "",
     standing_meet_link: doctor.standing_meet_link ?? "",
     google_calendar_id: doctor.google_calendar_id ?? "",
@@ -164,7 +163,7 @@ export function ProfileForm({
       </section>
 
       <section className="space-y-4">
-        <h2 className="section-index">Location & modes</h2>
+        <h2 className="section-index">Location & consultations</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="City" error={err("city")}>
             <input
@@ -210,11 +209,6 @@ export function ProfileForm({
             label="Offer online consultations"
             checked={f.online_enabled}
             onChange={(v) => setF((s) => ({ ...s, online_enabled: v }))}
-          />
-          <Toggle
-            label="Offer in-person visits"
-            checked={f.in_person_enabled}
-            onChange={(v) => setF((s) => ({ ...s, in_person_enabled: v }))}
           />
         </div>
       </section>

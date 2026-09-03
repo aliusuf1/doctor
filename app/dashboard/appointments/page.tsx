@@ -124,7 +124,6 @@ export default async function AppointmentsPage({
             rows={rows.map((r) => ({
               id: r.id,
               startsAt: r.starts_at,
-              mode: r.mode,
               status: r.status,
               paymentMethod: r.payment_method,
               paymentStatus: r.payment_status,

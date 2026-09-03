@@ -17,7 +17,7 @@ export function SiteHeader() {
       <div className="bg-forest text-panel-on-dark">
         <div className="shell flex items-center justify-between py-1.5">
           <span className="text-[0.6rem] font-bold uppercase tracking-[0.16em]">
-            Online and in-person dermatology consultations
+            Online dermatology consultations
           </span>
           <div className="hidden items-center gap-6 sm:flex">
             <Link

@@ -25,20 +25,18 @@ export default async function DoctorsPage({
   const sp = await searchParams;
   const specialty = typeof sp.specialty === "string" ? sp.specialty : undefined;
   const city = typeof sp.city === "string" ? sp.city : undefined;
-  const mode =
-    sp.mode === "online" || sp.mode === "in_person" ? sp.mode : undefined;
   const q = typeof sp.q === "string" ? sp.q : undefined;
   const sort: DoctorSort =
     sp.sort === "price" || sp.sort === "rating" ? sp.sort : "soonest";
 
   const [doctors, facets] = await Promise.all([
-    listPublicDoctors({ specialty, city, mode, q, sort }),
+    listPublicDoctors({ specialty, city, q, sort }),
     listDoctorFacets(),
   ]);
 
   const buildHref = (patch: Record<string, string | undefined>) => {
     const next = new URLSearchParams();
-    const merged = { specialty, city, mode, q, sort, ...patch };
+    const merged = { specialty, city, q, sort, ...patch };
     for (const [k, v] of Object.entries(merged)) {
       if (v && !(k === "sort" && v === "soonest")) next.set(k, v);
     }
@@ -48,7 +46,7 @@ export default async function DoctorsPage({
 
   const chip = (
     label: string,
-    key: "specialty" | "city" | "mode",
+    key: "specialty" | "city",
     value: string,
     active: boolean,
   ) => (
@@ -99,7 +97,6 @@ export default async function DoctorsPage({
           </div>
           {specialty && <input type="hidden" name="specialty" value={specialty} />}
           {city && <input type="hidden" name="city" value={city} />}
-          {mode && <input type="hidden" name="mode" value={mode} />}
           <select
             name="sort"
             defaultValue={sort}
@@ -120,8 +117,6 @@ export default async function DoctorsPage({
               chip(s, "specialty", s, specialty === s),
             )}
             {facets.cities.map((c) => chip(c, "city", c, city === c))}
-            {chip("Online", "mode", "online", mode === "online")}
-            {chip("In person", "mode", "in_person", mode === "in_person")}
           </div>
         )}
 

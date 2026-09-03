@@ -3,11 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { DateTime } from "luxon";
-import { ChevronLeft, ChevronRight, Loader2, Video, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 
-type Mode = "online" | "in_person";
 interface Slot {
   start: string;
   end: string;
@@ -16,17 +15,10 @@ interface Slot {
 /**
  * Full month availability explorer pulled live from Dr. Sana's calendar.
  * Navigate months, pick a day, pick a time — the time deep-links into the
- * booking page with the slot preselected (?slot=…&mode=…).
+ * booking page with the slot preselected (?slot=…).
  */
-export function AvailabilityExplorer({
-  onlineEnabled,
-  inPersonEnabled,
-}: {
-  onlineEnabled: boolean;
-  inPersonEnabled: boolean;
-}) {
+export function AvailabilityExplorer() {
   const today = useMemo(() => DateTime.now().setZone(site.timezone ?? "Asia/Karachi"), []);
-  const [mode, setMode] = useState<Mode>(onlineEnabled ? "online" : "in_person");
   const [month, setMonth] = useState<DateTime>(today.startOf("month"));
   const [byDate, setByDate] = useState<Record<string, Slot[]>>({});
   const [loading, setLoading] = useState(true);
@@ -34,12 +26,12 @@ export function AvailabilityExplorer({
   const [tz, setTz] = useState("Asia/Karachi");
 
   const load = useCallback(
-    (m: DateTime, md: Mode) => {
+    (m: DateTime) => {
       setLoading(true);
       const from = m.toISODate()!;
       const days = m.daysInMonth ?? 31;
       fetch(
-        `/api/doctors/${site.doctorSlug}/slots?mode=${md}&from=${from}&days=${days}`,
+        `/api/doctors/${site.doctorSlug}/slots?from=${from}&days=${days}`,
       )
         .then((r) => (r.ok ? r.json() : Promise.reject()))
         .then(
@@ -61,8 +53,8 @@ export function AvailabilityExplorer({
   );
 
   useEffect(() => {
-    load(month, mode);
-  }, [month, mode, load]);
+    load(month);
+  }, [month, load]);
 
   const gridStart = month.startOf("week").minus({ days: 1 }); // week starts Sunday
   const cells = Array.from({ length: 42 }, (_, i) => gridStart.plus({ days: i }));
@@ -72,30 +64,6 @@ export function AvailabilityExplorer({
   return (
     <div className="grid gap-8 md:grid-cols-[1fr_16rem] md:items-start">
       <div>
-        {onlineEnabled && inPersonEnabled && (
-          <div className="mb-4 inline-flex rounded-sm border border-line p-0.5 text-xs font-semibold">
-            {(
-              [
-                ["online", "Online", Video],
-                ["in_person", "In person", MapPin],
-              ] as const
-            ).map(([v, label, Icon]) => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => setMode(v)}
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-[2px] px-3 py-1.5 transition-colors",
-                  mode === v ? "bg-ink text-paper" : "text-ink-soft",
-                )}
-              >
-                <Icon size={13} />
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="flex items-center justify-between">
           <button
             type="button"
@@ -194,7 +162,7 @@ export function AvailabilityExplorer({
               {selectedSlots.map((s) => (
                 <Link
                   key={s.start}
-                  href={`${site.bookHref}?mode=${mode}&slot=${encodeURIComponent(s.start)}`}
+                  href={`${site.bookHref}?slot=${encodeURIComponent(s.start)}`}
                   className="rounded-sm border border-line px-2 py-2 text-center text-sm font-medium transition-colors hover:border-flare hover:text-flare"
                 >
                   {DateTime.fromISO(s.start).setZone(tz).toFormat("h:mm a")}

@@ -131,7 +131,6 @@ export async function saveWeeklyRules(raw: unknown): Promise<ActionResult> {
       weekday: r.weekday,
       start_time: r.start_time,
       end_time: r.end_time,
-      mode: r.mode,
       is_active: true,
     }));
     const { error: insErr } = await sb.from("availability_rules").insert(rows);

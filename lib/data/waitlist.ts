@@ -37,14 +37,8 @@ export async function notifyWaitlistForDate(
   // Confirm there really is an open slot that day before pinging anyone.
   const from = DateTime.fromISO(date).startOf("day").toJSDate();
   const to = DateTime.fromISO(date).endOf("day").toJSDate();
-  let hasSlot = false;
-  for (const mode of ["online", "in_person"] as const) {
-    const res = await getDoctorSlotsBySlug({ slug: doctor.slug, mode, from, to });
-    if (res?.days.some((d) => d.date === date && d.slots.length > 0)) {
-      hasSlot = true;
-      break;
-    }
-  }
+  const res = await getDoctorSlotsBySlug({ slug: doctor.slug, from, to });
+  const hasSlot = res?.days.some((d) => d.date === date && d.slots.length > 0);
   if (!hasSlot) return;
 
   const bookUrl = `${site.url}/doctors/${doctor.slug}`;
@@ -58,7 +52,6 @@ export async function notifyWaitlistForDate(
         doctorName: doctor.full_name,
         startsAtIso: DateTime.fromISO(date).toISO()!,
         timezone: "Asia/Karachi",
-        mode: e.mode,
         feePkr: null,
         meetLink: null,
         manageUrl: bookUrl,

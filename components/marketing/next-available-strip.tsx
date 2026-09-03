@@ -28,7 +28,7 @@ export function NextAvailableStrip() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/doctors/${site.doctorSlug}/slots?mode=online&days=21`)
+    fetch(`/api/doctors/${site.doctorSlug}/slots?days=21`)
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data: { days: Day[]; doctor?: { timezone?: string } }) => {
         if (cancelled) return;

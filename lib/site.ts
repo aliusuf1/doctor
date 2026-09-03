@@ -10,7 +10,7 @@ export const site = {
   doctorTitle: "Consultant Dermatologist",
   tagline: "Evidence-led skin, hair and nail care — online and in Karachi.",
   description:
-    "Book an online or in-person dermatology consultation with Dr. Sana Siddiqui. Real-time availability, instant confirmation, secure video link.",
+    "Book an online dermatology consultation with Dr. Sana Siddiqui. Real-time availability, instant confirmation, secure video link.",
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   city: "Karachi",
   country: "Pakistan",

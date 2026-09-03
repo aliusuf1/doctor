@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { DateTime } from "luxon";
 import { getDoctorSlotsBySlug } from "@/lib/data/schedule";
-import type { ConsultationMode } from "@/lib/db/types";
 
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/doctors/:slug/slots?mode=online&from=YYYY-MM-DD&days=14
+ * GET /api/doctors/:slug/slots?from=YYYY-MM-DD&days=14
  * Returns bookable slots grouped by date (doctor timezone), each slot as
  * UTC ISO instants plus the doctor's timezone for client-side formatting.
  */
@@ -16,10 +15,6 @@ export async function GET(
 ) {
   const { slug } = await params;
   const url = new URL(req.url);
-
-  const modeParam = url.searchParams.get("mode");
-  const mode: ConsultationMode =
-    modeParam === "in_person" ? "in_person" : "online";
 
   const fromParam = url.searchParams.get("from");
   const days = Math.min(
@@ -37,7 +32,7 @@ export async function GET(
   const from = fromBase.startOf("day").toJSDate();
   const to = fromBase.plus({ days }).endOf("day").toJSDate();
 
-  const result = await getDoctorSlotsBySlug({ slug, mode, from, to });
+  const result = await getDoctorSlotsBySlug({ slug, from, to });
   if (!result) {
     return NextResponse.json(
       { error: "Doctor not found or not accepting bookings" },
@@ -55,9 +50,7 @@ export async function GET(
       fee_pkr: context.doctor.consultation_fee_pkr,
       currency: context.doctor.currency,
       online_enabled: context.doctor.online_enabled,
-      in_person_enabled: context.doctor.in_person_enabled,
     },
-    mode,
     days: slotDays,
   });
 }

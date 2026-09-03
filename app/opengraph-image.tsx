@@ -55,7 +55,7 @@ export default function OG() {
           </div>
         </div>
         <div style={{ display: "flex", fontSize: 22, color: "#6b6f66" }}>
-          Online and in-person dermatology · Karachi
+          Online dermatology · Karachi
         </div>
       </div>
     ),

@@ -20,7 +20,6 @@ export interface TemplateContext {
   doctorName: string;
   startsAtIso: string;
   timezone: string;
-  mode: "online" | "in_person";
   feePkr: number | null;
   meetLink: string | null;
   manageUrl: string;
@@ -44,7 +43,7 @@ export function renderMessage(
   ctx: TemplateContext,
 ): RenderedMessage {
   const w = when(ctx);
-  const modeLabel = ctx.mode === "online" ? "Online video" : "In person";
+  const modeLabel = "Online video";
 
   switch (event) {
     case "booking_received":

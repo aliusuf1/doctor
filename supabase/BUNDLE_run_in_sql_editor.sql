@@ -31,7 +31,6 @@ create table if not exists public.doctors (
   booking_horizon_days integer not null default 30 check (booking_horizon_days between 1 and 120),
   cancellation_notice_hours integer not null default 6 check (cancellation_notice_hours between 0 and 336),
   online_enabled boolean not null default true,
-  in_person_enabled boolean not null default true,
   bank_details text,
   google_calendar_id text,
   standing_meet_link text,
@@ -48,7 +47,6 @@ create table if not exists public.availability_rules (
   weekday smallint not null check (weekday between 0 and 6), -- 0 = Sunday
   start_time time not null,
   end_time time not null,
-  mode text not null default 'both' check (mode in ('online','in_person','both')),
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   check (start_time < end_time)
@@ -89,7 +87,7 @@ create table if not exists public.appointments (
   starts_at timestamptz not null,
   ends_at timestamptz not null,
   doctor_timezone text not null default 'Asia/Karachi',
-  mode text not null check (mode in ('online','in_person')),
+  mode text not null default 'online' check (mode in ('online','in_person')),
   status text not null default 'pending_payment'
     check (status in ('pending_payment','confirmed','completed','cancelled','no_show')),
   concern text,
@@ -210,7 +208,7 @@ with (security_invoker = true) as
 select
   slug, full_name, credentials, specialty, headline, bio, photo_url,
   clinic_name, city, timezone, consultation_fee_pkr, currency,
-  slot_duration_min, online_enabled, in_person_enabled
+  slot_duration_min, online_enabled
 from public.doctors
 where is_active = true;
 
@@ -304,7 +302,6 @@ create table if not exists public.waitlist_entries (
   id uuid primary key default gen_random_uuid(),
   doctor_id uuid not null references public.doctors(id) on delete cascade,
   date date not null,
-  mode text not null default 'online' check (mode in ('online','in_person')),
   full_name text not null,
   email text not null,
   phone text,
@@ -336,7 +333,7 @@ with (security_invoker = true) as
 select
   d.slug, d.full_name, d.credentials, d.specialty, d.headline, d.bio,
   d.photo_url, d.clinic_name, d.city, d.timezone, d.consultation_fee_pkr,
-  d.currency, d.slot_duration_min, d.online_enabled, d.in_person_enabled,
+  d.currency, d.slot_duration_min, d.online_enabled,
   d.verified, d.next_available_at,
   coalesce(r.rating_avg, 0)::numeric(3,2) as rating_avg,
   coalesce(r.rating_count, 0) as rating_count
@@ -372,7 +369,7 @@ grant select on public.public_reviews to anon, authenticated;
 insert into public.doctors (
   clerk_user_id, slug, full_name, credentials, specialty, headline, bio,
   city, timezone, consultation_fee_pkr, slot_duration_min, min_notice_hours,
-  booking_horizon_days, online_enabled, in_person_enabled, bank_details,
+  booking_horizon_days, online_enabled, bank_details,
   is_active, onboarded_at
 ) values (
   'user_REPLACE_WITH_CLERK_ID',
@@ -381,23 +378,23 @@ insert into public.doctors (
   'MBBS, FCPS, SCE',
   '{Dermatology,"Acne & scarring","Pigmentation","Hair & scalp"}',
   'Consultant dermatologist focused on careful assessment, realistic expectations and plans you can actually follow.',
-  E'Dr. Sana Siddiqui is a consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow.\n\nShe consults online and in person in Karachi.',
-  'Karachi', 'Asia/Karachi', 3500, 20, 12, 30, true, true,
+  E'Dr. Sana Siddiqui is a consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow.\n\nShe consults online from Karachi.',
+  'Karachi', 'Asia/Karachi', 3500, 20, 12, 30, true,
   E'Bank: Example Bank\nAccount title: Dr Sana Siddiqui\nIBAN: PK00EXMP0000000000000000',
   true, now()
 )
 on conflict (slug) do nothing;
 
 -- A simple weekly template: Mon/Wed/Fri evenings, Sat morning.
-insert into public.availability_rules (doctor_id, weekday, start_time, end_time, mode)
-select d.id, x.weekday, x.start_time, x.end_time, x.mode
+insert into public.availability_rules (doctor_id, weekday, start_time, end_time)
+select d.id, x.weekday, x.start_time, x.end_time
 from public.doctors d
 cross join (values
-  (1, time '17:00', time '20:00', 'both'),
-  (3, time '17:00', time '20:00', 'both'),
-  (5, time '17:00', time '20:00', 'online'),
-  (6, time '10:00', time '13:00', 'both')
-) as x(weekday, start_time, end_time, mode)
+  (1, time '17:00', time '20:00'),
+  (3, time '17:00', time '20:00'),
+  (5, time '17:00', time '20:00'),
+  (6, time '10:00', time '13:00')
+) as x(weekday, start_time, end_time)
 where d.slug = 'sana-siddiqui'
 on conflict do nothing;
 

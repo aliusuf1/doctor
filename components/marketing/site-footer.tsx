@@ -35,7 +35,6 @@ export function SiteFooter() {
           title="Appointments"
           links={[
             { label: "Online consultation", href: site.bookHref },
-            { label: "In-person visit", href: site.bookHref },
             { label: `${site.city}, ${site.country}`, href: site.bookHref },
           ]}
         />

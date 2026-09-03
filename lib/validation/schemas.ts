@@ -27,7 +27,6 @@ export const doctorProfileSchema = z.object({
   booking_horizon_days: z.coerce.number().int().min(1).max(120),
   cancellation_notice_hours: z.coerce.number().int().min(0).max(336),
   online_enabled: z.boolean(),
-  in_person_enabled: z.boolean(),
   bank_details: z.string().max(1200).optional().or(z.literal("")),
   standing_meet_link: z.string().url().optional().or(z.literal("")),
   google_calendar_id: z.string().max(200).optional().or(z.literal("")),
@@ -40,7 +39,6 @@ export const availabilityRuleSchema = z
     weekday: z.coerce.number().int().min(0).max(6),
     start_time: timeString,
     end_time: timeString,
-    mode: z.enum(["online", "in_person", "both"]),
   })
   .refine((r) => r.start_time < r.end_time, {
     message: "End time must be after start time",
@@ -68,7 +66,6 @@ export const availabilityOverrideSchema = z
 
 export const bookingSchema = z.object({
   doctor_slug: z.string().min(1),
-  mode: z.enum(["online", "in_person"]),
   slot_start: z.string().datetime({ offset: true }),
   full_name: z.string().min(2).max(120),
   email: z.string().email().max(200),

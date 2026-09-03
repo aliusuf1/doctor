@@ -29,16 +29,9 @@ export async function GET(
     status: a.status === "cancelled" ? "CANCELLED" : "CONFIRMED",
     summary: `Dermatology consultation — ${d.full_name}`,
     description:
-      (a.mode === "online"
-        ? a.meet_link
-          ? `Join: ${a.meet_link}\n`
-          : "Online video consultation\n"
-        : `In person — ${d.clinic_name ?? d.city}\n`) +
+      (a.meet_link ? `Join: ${a.meet_link}\n` : "Online video consultation\n") +
       `Manage: ${site.url}/booking/${a.manage_token}`,
-    location:
-      a.mode === "online"
-        ? (a.meet_link ?? "Online")
-        : `${d.clinic_name ?? ""} ${d.clinic_address ?? d.city}`.trim(),
+    location: a.meet_link ?? "Online",
     url: `${site.url}/booking/${a.manage_token}`,
     organizerName: d.full_name,
   });

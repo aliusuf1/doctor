@@ -11,12 +11,11 @@ import {
 import type {
   AvailabilityOverrideRow,
   AvailabilityRuleRow,
-  ConsultationMode,
   DoctorRow,
 } from "@/lib/db/types";
 
 const SCHEDULE_FIELDS =
-  "id, slug, full_name, timezone, slot_duration_min, buffer_min, min_notice_hours, booking_horizon_days, consultation_fee_pkr, currency, online_enabled, in_person_enabled, is_active";
+  "id, slug, full_name, timezone, slot_duration_min, buffer_min, min_notice_hours, booking_horizon_days, consultation_fee_pkr, currency, online_enabled, is_active";
 
 export interface ScheduleContext {
   doctor: Pick<
@@ -32,7 +31,6 @@ export interface ScheduleContext {
     | "consultation_fee_pkr"
     | "currency"
     | "online_enabled"
-    | "in_person_enabled"
     | "is_active"
   >;
   config: DoctorScheduleConfig;
@@ -111,7 +109,6 @@ async function loadBusy(
 /** Public: available slots for a doctor identified by slug. */
 export async function getDoctorSlotsBySlug(params: {
   slug: string;
-  mode: ConsultationMode;
   from: Date;
   to: Date;
 }): Promise<{ context: ScheduleContext; days: SlotDay[] } | null> {
@@ -127,7 +124,6 @@ export async function getDoctorSlotsBySlug(params: {
     rules: context.rules,
     overrides: context.overrides,
     busy,
-    mode: params.mode,
     from: params.from,
     to: params.to,
   });
@@ -137,7 +133,6 @@ export async function getDoctorSlotsBySlug(params: {
 /** Server-side re-check used at booking time (defence in depth). */
 export async function verifySlotBookable(params: {
   doctorId: string;
-  mode: ConsultationMode;
   slotStartIso: string;
 }): Promise<{ ok: boolean; context?: ScheduleContext }> {
   const start = new Date(params.slotStartIso);
@@ -158,7 +153,6 @@ export async function verifySlotBookable(params: {
     rules: context.rules,
     overrides: context.overrides,
     busy,
-    mode: params.mode,
     slotStartIso: params.slotStartIso,
   });
   return { ok, context };

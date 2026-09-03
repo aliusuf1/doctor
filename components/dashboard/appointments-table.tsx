@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, FileText, Video, MapPin } from "lucide-react";
+import { Loader2, FileText } from "lucide-react";
 import {
   doctorCancel,
   getProofUrl,
@@ -16,7 +16,6 @@ interface Row {
   id: string;
   startsAt: string;
   startsAtLabel: string;
-  mode: "online" | "in_person";
   status: string;
   paymentMethod: "online" | "bank_transfer" | null;
   paymentStatus: string;
@@ -55,7 +54,6 @@ export function AppointmentsTable({
           <tr>
             <th className="px-4 py-2.5">When ({timezone})</th>
             <th className="px-4 py-2.5">Patient</th>
-            <th className="px-4 py-2.5">Mode</th>
             <th className="px-4 py-2.5">Payment</th>
             <th className="px-4 py-2.5">Status</th>
             <th className="px-4 py-2.5"></th>
@@ -113,12 +111,6 @@ function RowItem({
         <td className="px-4 py-3">{r.startsAtLabel}</td>
         <td className="px-4 py-3">{r.patientName}</td>
         <td className="px-4 py-3">
-          <span className="inline-flex items-center gap-1 text-ink-soft">
-            {r.mode === "online" ? <Video size={14} /> : <MapPin size={14} />}
-            {r.mode === "online" ? "Online" : "In person"}
-          </span>
-        </td>
-        <td className="px-4 py-3">
           <span className="text-ink-soft">
             {r.paymentMethod === "online" ? "Online" : "Bank transfer"} ·{" "}
             {r.paymentStatus}
@@ -136,7 +128,7 @@ function RowItem({
 
       {open && (
         <tr className="bg-cream">
-          <td colSpan={6} className="px-4 py-4">
+          <td colSpan={5} className="px-4 py-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="text-sm">
                 <p className="text-xs uppercase tracking-wide text-ink-faint">
@@ -201,7 +193,7 @@ function RowItem({
                   </div>
                 )}
 
-                {r.mode === "online" && r.status !== "cancelled" && (
+                {r.status !== "cancelled" && (
                   <div className="flex items-center gap-2">
                     <input
                       className="field h-9 min-w-0 flex-1 py-0 text-xs"

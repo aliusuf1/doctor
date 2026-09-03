@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DateTime } from "luxon";
-import { ArrowLeft, CheckCircle2, Clock, Video, MapPin } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Video } from "lucide-react";
 import { hasSupabaseAdmin } from "@/lib/supabase/admin";
 import { loadAppointmentBundle } from "@/lib/data/appointments";
 import { ManagePanel } from "@/components/booking/manage-panel";
@@ -80,21 +80,15 @@ export default async function BookingManagePage({
               <span className="text-ink-faint">({tz})</span>
             </div>
             <div className="flex items-center gap-2">
-              {a.mode === "online" ? (
-                <Video size={16} className="text-ink-faint" />
-              ) : (
-                <MapPin size={16} className="text-ink-faint" />
-              )}
-              {a.mode === "online"
-                ? "Online video consultation"
-                : `In person — ${d.clinic_name ?? d.city}`}
+              <Video size={16} className="text-ink-faint" />
+              Online video consultation
             </div>
             <div className="flex items-center gap-2">
               <span className="text-ink-faint">Fee</span>
               {formatPkr(a.fee_pkr)}
             </div>
 
-            {a.status === "confirmed" && a.mode === "online" && a.meet_link && (
+            {a.status === "confirmed" && a.meet_link && (
               <a
                 href={a.meet_link}
                 target="_blank"
@@ -105,7 +99,7 @@ export default async function BookingManagePage({
               </a>
             )}
 
-            {a.status === "confirmed" && a.mode === "online" && !a.meet_link && (
+            {a.status === "confirmed" && !a.meet_link && (
               <p className="rounded border border-warn bg-warn-tint px-3 py-2 text-xs text-warn">
                 Your video link will appear here shortly before the appointment.
               </p>
@@ -152,7 +146,6 @@ export default async function BookingManagePage({
           appointmentId={a.id}
           token={token}
           slug={d.slug}
-          mode={a.mode}
           timezone={tz}
           status={a.status}
           paymentMethod={a.payment_method}

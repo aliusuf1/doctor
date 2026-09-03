@@ -3,10 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DateTime } from "luxon";
-import { Loader2, Video, MapPin, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import { cn, formatPkr } from "@/lib/utils";
 
-type Mode = "online" | "in_person";
 interface Slot {
   start: string;
   end: string;
@@ -22,7 +21,6 @@ interface Props {
   timezone: string;
   feePkr: number | null;
   onlineEnabled: boolean;
-  inPersonEnabled: boolean;
   onlinePaymentsEnabled: boolean;
 }
 
@@ -32,25 +30,14 @@ export function BookingWidget({
   timezone,
   feePkr,
   onlineEnabled,
-  inPersonEnabled,
   onlinePaymentsEnabled,
 }: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const wantedSlot = params.get("slot");
   const wantedConcern = params.get("concern");
-  const wantedMode = params.get("mode");
   const slotApplied = useRef(false);
 
-  const [mode, setMode] = useState<Mode>(
-    wantedMode === "in_person" && inPersonEnabled
-      ? "in_person"
-      : wantedMode === "online" && onlineEnabled
-        ? "online"
-        : onlineEnabled
-          ? "online"
-          : "in_person",
-  );
   const [days, setDays] = useState<SlotDay[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +68,7 @@ export function BookingWidget({
     let cancelled = false;
     setLoading(true);
     setError(null);
-    fetch(`/api/doctors/${slug}/slots?mode=${mode}&days=21`)
+    fetch(`/api/doctors/${slug}/slots?days=21`)
       .then(async (r) => {
         if (!r.ok) throw new Error((await r.json()).error ?? "Failed to load");
         return r.json();
@@ -110,7 +97,7 @@ export function BookingWidget({
     return () => {
       cancelled = true;
     };
-  }, [slug, mode]);
+  }, [slug]);
 
   const activeDay = days.find((d) => d.date === activeDate);
 
@@ -130,7 +117,6 @@ export function BookingWidget({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           doctor_slug: slug,
-          mode,
           slot_start: slot.start,
           full_name: form.full_name,
           email: form.email,
@@ -164,31 +150,10 @@ export function BookingWidget({
       </div>
 
       <div className="space-y-6 p-6">
-        {/* Mode toggle */}
-        {onlineEnabled && inPersonEnabled && (
-          <div className="grid grid-cols-2 gap-2">
-            {(
-              [
-                ["online", "Online", <Video key="v" size={15} />],
-                ["in_person", "In person", <MapPin key="m" size={15} />],
-              ] as const
-            ).map(([value, label, icon]) => (
-              <button
-                key={value}
-                type="button"
-                onClick={() => setMode(value)}
-                className={cn(
-                  "flex items-center justify-center gap-2 rounded border px-3 py-2 text-sm transition-colors",
-                  mode === value
-                    ? "border-green bg-green text-paper"
-                    : "border-line-strong hover:border-green",
-                )}
-              >
-                {icon}
-                {label}
-              </button>
-            ))}
-          </div>
+        {!onlineEnabled && (
+          <p className="rounded border border-line-strong px-3 py-2 text-sm text-ink-faint">
+            Online consultations are not being accepted right now.
+          </p>
         )}
 
         {/* Slot picker */}
@@ -284,7 +249,7 @@ export function BookingWidget({
                 {DateTime.fromISO(slot.start)
                   .setZone(timezone)
                   .toFormat("cccc d LLL, h:mm a")}
-                <span className="text-ink-faint"> · {mode === "online" ? "Online" : "In person"}</span>
+                <span className="text-ink-faint"> · Online</span>
               </span>
               <button
                 type="button"

@@ -58,7 +58,7 @@ export function TriageWizard() {
     concern && duration
       ? `${concern} — ${area === "hair" ? "hair/scalp" : area}, ${duration.toLowerCase()}.`
       : "";
-  const bookUrl = `${site.bookHref}?mode=online&concern=${encodeURIComponent(summary)}`;
+  const bookUrl = `${site.bookHref}?concern=${encodeURIComponent(summary)}`;
 
   const Progress = () => (
     <div className="mb-6 flex items-center gap-2">

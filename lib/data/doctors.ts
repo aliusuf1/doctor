@@ -3,7 +3,7 @@ import { supabaseAnon } from "@/lib/supabase/anon";
 import type { PublicDoctor } from "@/lib/db/types";
 
 const PUBLIC_COLUMNS =
-  "slug, full_name, credentials, specialty, headline, bio, photo_url, clinic_name, city, timezone, consultation_fee_pkr, currency, slot_duration_min, online_enabled, in_person_enabled, verified, next_available_at, rating_avg, rating_count";
+  "slug, full_name, credentials, specialty, headline, bio, photo_url, clinic_name, city, timezone, consultation_fee_pkr, currency, slot_duration_min, online_enabled, verified, next_available_at, rating_avg, rating_count";
 
 export type DoctorSort = "soonest" | "price" | "rating";
 
@@ -12,7 +12,6 @@ export async function listPublicDoctors(
     limit?: number;
     specialty?: string;
     city?: string;
-    mode?: "online" | "in_person";
     q?: string;
     sort?: DoctorSort;
   } = {},
@@ -23,8 +22,6 @@ export async function listPublicDoctors(
   let q = sb.from("public_doctors").select(PUBLIC_COLUMNS);
   if (opts.specialty) q = q.contains("specialty", [opts.specialty]);
   if (opts.city) q = q.eq("city", opts.city);
-  if (opts.mode === "online") q = q.eq("online_enabled", true);
-  if (opts.mode === "in_person") q = q.eq("in_person_enabled", true);
   if (opts.q) {
     const term = `%${opts.q}%`;
     q = q.or(`full_name.ilike.${term},headline.ilike.${term},credentials.ilike.${term}`);

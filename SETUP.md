@@ -1,6 +1,6 @@
 # Setup — Northline Dermatology
 
-A Next.js (App Router) platform for multi-doctor online/in-person dermatology
+A Next.js (App Router) platform for multi-doctor online dermatology
 consultations: live availability, instant booking, automatic Google Meet links,
 online + bank-transfer payments, email + WhatsApp notifications.
 

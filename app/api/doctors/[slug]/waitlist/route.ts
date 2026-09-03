@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic";
 
 const schema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  mode: z.enum(["online", "in_person"]),
   full_name: z.string().min(2).max(120),
   email: z.string().email().max(200),
   phone: z.string().max(30).optional().or(z.literal("")),
@@ -44,7 +43,6 @@ export async function POST(
     {
       doctor_id: doctor.id,
       date: v.date,
-      mode: v.mode,
       full_name: v.full_name,
       email: v.email.toLowerCase(),
       phone: v.phone || null,

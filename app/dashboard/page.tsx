@@ -205,9 +205,6 @@ export default async function DashboardOverview() {
                       .setZone(doctor.timezone)
                       .toFormat("ccc d LLL, h:mm a")}
                   </span>
-                  <span className="text-ink-faint">
-                    {a.mode === "online" ? "Online" : "In person"}
-                  </span>
                   <span className="flex items-center gap-2">
                     <span
                       className={`badge ${

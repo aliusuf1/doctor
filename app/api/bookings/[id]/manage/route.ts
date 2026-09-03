@@ -67,7 +67,6 @@ export async function POST(
   // reschedule
   const check = await verifySlotBookable({
     doctorId: d.id,
-    mode: a.mode,
     slotStartIso: body.slot_start,
   });
   if (!check.ok) {

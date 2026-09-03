@@ -18,7 +18,6 @@ export function ManagePanel({
   appointmentId,
   token,
   slug,
-  mode,
   timezone,
   status,
   paymentMethod,
@@ -31,7 +30,6 @@ export function ManagePanel({
   appointmentId: string;
   token: string;
   slug: string;
-  mode: "online" | "in_person";
   timezone: string;
   status: string;
   paymentMethod: "online" | "bank_transfer" | null;
@@ -58,14 +56,14 @@ export function ManagePanel({
 
   useEffect(() => {
     if (!showResched) return;
-    fetch(`/api/doctors/${slug}/slots?mode=${mode}&days=21`)
+    fetch(`/api/doctors/${slug}/slots?days=21`)
       .then((r) => r.json())
       .then((d: { days: SlotDay[] }) => {
         setDays(d.days ?? []);
         setActiveDate(d.days?.[0]?.date ?? null);
       })
       .catch(() => setError("Could not load availability"));
-  }, [showResched, slug, mode]);
+  }, [showResched, slug]);
 
   async function uploadProof(e: React.FormEvent) {
     e.preventDefault();

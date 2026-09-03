@@ -32,7 +32,6 @@ export function templateCtx(
     doctorName: d.full_name,
     startsAtIso: a.starts_at,
     timezone: a.doctor_timezone || d.timezone,
-    mode: a.mode,
     feePkr: a.fee_pkr,
     meetLink: a.meet_link,
     manageUrl: manageUrl(a.manage_token),
@@ -60,13 +59,12 @@ export async function loadAppointmentBundle(
   };
 }
 
-/** Generate + attach a Google Meet event for an online appointment. */
+/** Generate + attach a Google Meet event for the appointment. */
 export async function attachMeet(
   appointment: AppointmentRow,
   doctor: DoctorRow,
   patient: PatientRow,
 ) {
-  if (appointment.mode !== "online") return appointment;
   const res = await createMeetEvent({
     calendarId: doctor.google_calendar_id ?? undefined,
     summary: `Dermatology consultation — ${patient.full_name} with ${doctor.full_name}`,
@@ -107,7 +105,7 @@ export async function confirmAppointment(id: string, opts: { reason?: string } =
   if (appointment.status === "confirmed") return { ok: true as const };
 
   let current = appointment;
-  if (appointment.mode === "online" && !appointment.meet_link) {
+  if (!appointment.meet_link) {
     current = await attachMeet(appointment, doctor, patient);
   }
 

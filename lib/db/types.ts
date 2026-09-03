@@ -3,8 +3,6 @@
  * Regenerate/replace with `supabase gen types typescript` once a project exists.
  */
 
-export type ConsultationMode = "online" | "in_person";
-export type RuleMode = "online" | "in_person" | "both";
 export type OverrideType = "block" | "extra";
 export type AppointmentStatus =
   | "pending_payment"
@@ -43,7 +41,6 @@ export interface DoctorRow {
   booking_horizon_days: number;
   cancellation_notice_hours: number;
   online_enabled: boolean;
-  in_person_enabled: boolean;
   bank_details: string | null;
   google_calendar_id: string | null;
   standing_meet_link: string | null;
@@ -74,7 +71,6 @@ export interface WaitlistEntryRow {
   id: string;
   doctor_id: string;
   date: string;
-  mode: ConsultationMode;
   full_name: string;
   email: string;
   phone: string | null;
@@ -99,7 +95,6 @@ export type PublicDoctor = Pick<
   | "currency"
   | "slot_duration_min"
   | "online_enabled"
-  | "in_person_enabled"
 > & {
   verified: boolean;
   next_available_at: string | null;
@@ -113,7 +108,6 @@ export interface AvailabilityRuleRow {
   weekday: number; // 0=Sun .. 6=Sat
   start_time: string; // "HH:MM" or "HH:MM:SS"
   end_time: string;
-  mode: RuleMode;
   is_active: boolean;
   created_at: string;
 }
@@ -145,7 +139,6 @@ export interface AppointmentRow {
   starts_at: string;
   ends_at: string;
   doctor_timezone: string;
-  mode: ConsultationMode;
   status: AppointmentStatus;
   concern: string | null;
   fee_pkr: number | null;

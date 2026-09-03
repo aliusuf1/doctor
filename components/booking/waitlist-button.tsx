@@ -4,13 +4,7 @@ import { useState } from "react";
 import { DateTime } from "luxon";
 import { BellRing, Loader2 } from "lucide-react";
 
-export function WaitlistButton({
-  slug,
-  defaultMode,
-}: {
-  slug: string;
-  defaultMode: "online" | "in_person";
-}) {
+export function WaitlistButton({ slug }: { slug: string }) {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<"idle" | "saving" | "done" | "error">(
     "idle",
@@ -18,7 +12,6 @@ export function WaitlistButton({
   const [error, setError] = useState<string | null>(null);
   const [f, setF] = useState({
     date: DateTime.now().plus({ days: 1 }).toISODate()!,
-    mode: defaultMode,
     full_name: "",
     email: "",
     phone: "",
@@ -64,29 +57,14 @@ export function WaitlistButton({
       ) : (
         <form onSubmit={submit} className="space-y-3">
           <p className="text-sm font-semibold">Notify me if a slot opens</p>
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="date"
-              required
-              className="field py-1.5 text-sm"
-              value={f.date}
-              min={DateTime.now().toISODate()!}
-              onChange={(e) => setF((s) => ({ ...s, date: e.target.value }))}
-            />
-            <select
-              className="field py-1.5 text-sm"
-              value={f.mode}
-              onChange={(e) =>
-                setF((s) => ({
-                  ...s,
-                  mode: e.target.value as "online" | "in_person",
-                }))
-              }
-            >
-              <option value="online">Online</option>
-              <option value="in_person">In person</option>
-            </select>
-          </div>
+          <input
+            type="date"
+            required
+            className="field py-1.5 text-sm"
+            value={f.date}
+            min={DateTime.now().toISODate()!}
+            onChange={(e) => setF((s) => ({ ...s, date: e.target.value }))}
+          />
           <input
             required
             placeholder="Full name"

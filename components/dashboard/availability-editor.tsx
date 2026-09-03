@@ -10,12 +10,10 @@ import {
   saveWeeklyRules,
 } from "@/lib/actions/doctor";
 
-type RuleMode = "online" | "in_person" | "both";
 interface Rule {
   weekday: number;
   start_time: string;
   end_time: string;
-  mode: RuleMode;
 }
 interface Override {
   id: string;
@@ -65,7 +63,7 @@ export function AvailabilityEditor({
   function addRow(weekday: number) {
     setRules((r) => [
       ...r,
-      { weekday, start_time: "17:00", end_time: "20:00", mode: "both" },
+      { weekday, start_time: "17:00", end_time: "20:00" },
     ]);
   }
   function updateRow(idx: number, patch: Partial<Rule>) {
@@ -170,19 +168,6 @@ export function AvailabilityEditor({
                               updateRow(idx, { end_time: e.target.value })
                             }
                           />
-                          <select
-                            className="field w-32 py-1"
-                            value={r.mode}
-                            onChange={(e) =>
-                              updateRow(idx, {
-                                mode: e.target.value as RuleMode,
-                              })
-                            }
-                          >
-                            <option value="both">Both</option>
-                            <option value="online">Online</option>
-                            <option value="in_person">In person</option>
-                          </select>
                           <button
                             onClick={() => removeRow(idx)}
                             className="text-ink-faint hover:text-danger"

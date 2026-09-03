@@ -5,7 +5,7 @@
 insert into public.doctors (
   clerk_user_id, slug, full_name, credentials, specialty, headline, bio,
   city, timezone, consultation_fee_pkr, slot_duration_min, min_notice_hours,
-  booking_horizon_days, online_enabled, in_person_enabled, bank_details,
+  booking_horizon_days, online_enabled, bank_details,
   is_active, onboarded_at
 ) values (
   'user_REPLACE_WITH_CLERK_ID',
@@ -14,23 +14,23 @@ insert into public.doctors (
   'MBBS, FCPS, SCE',
   '{Dermatology,"Acne & scarring","Pigmentation","Hair & scalp"}',
   'Consultant dermatologist focused on careful assessment, realistic expectations and plans you can actually follow.',
-  E'Dr. Sana Siddiqui is a consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow.\n\nShe consults online and in person in Karachi.',
-  'Karachi', 'Asia/Karachi', 3500, 20, 12, 30, true, true,
+  E'Dr. Sana Siddiqui is a consultant dermatologist whose work spans patient care and medical education. Her approach favours evidence, clarity and treatment plans patients can understand and follow.\n\nShe consults online from Karachi.',
+  'Karachi', 'Asia/Karachi', 3500, 20, 12, 30, true,
   E'Bank: Example Bank\nAccount title: Dr Sana Siddiqui\nIBAN: PK00EXMP0000000000000000',
   true, now()
 )
 on conflict (slug) do nothing;
 
 -- A simple weekly template: Mon/Wed/Fri evenings, Sat morning.
-insert into public.availability_rules (doctor_id, weekday, start_time, end_time, mode)
-select d.id, x.weekday, x.start_time, x.end_time, x.mode
+insert into public.availability_rules (doctor_id, weekday, start_time, end_time)
+select d.id, x.weekday, x.start_time, x.end_time
 from public.doctors d
 cross join (values
-  (1, time '17:00', time '20:00', 'both'),
-  (3, time '17:00', time '20:00', 'both'),
-  (5, time '17:00', time '20:00', 'online'),
-  (6, time '10:00', time '13:00', 'both')
-) as x(weekday, start_time, end_time, mode)
+  (1, time '17:00', time '20:00'),
+  (3, time '17:00', time '20:00'),
+  (5, time '17:00', time '20:00'),
+  (6, time '10:00', time '13:00')
+) as x(weekday, start_time, end_time)
 where d.slug = 'sana-siddiqui'
 on conflict do nothing;
 

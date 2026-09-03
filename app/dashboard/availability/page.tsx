@@ -39,7 +39,7 @@ export default async function AvailabilityPage() {
     overrides = (o.data ?? []) as AvailabilityOverrideRow[];
   }
 
-  // Preview: what patients would see for ~6 weeks (either mode)
+  // Preview: what patients would see for ~6 weeks
   const from = new Date();
   const to = DateTime.now().plus({ days: 42 }).toJSDate();
   const config = {
@@ -63,29 +63,11 @@ export default async function AvailabilityPage() {
   }
   const busy = booked.map((b) => ({ start: b.starts_at, end: b.ends_at }));
 
-  const previewOnline = buildSlots({
-    config,
-    rules,
-    overrides,
-    busy,
-    mode: "online",
-    from,
-    to,
-  });
-  const previewInPerson = buildSlots({
-    config,
-    rules,
-    overrides,
-    busy,
-    mode: "in_person",
-    from,
-    to,
-  });
-  const preview = previewOnline;
+  const preview = buildSlots({ config, rules, overrides, busy, from, to });
 
   // per-day aggregate for the month calendar
   const byDate = new Map<string, number>();
-  for (const d of [...previewOnline, ...previewInPerson]) {
+  for (const d of preview) {
     byDate.set(d.date, Math.max(byDate.get(d.date) ?? 0, d.slots.length));
   }
   const calendarDays = [...byDate.entries()].map(([date, open]) => ({
@@ -125,7 +107,6 @@ export default async function AvailabilityPage() {
             weekday: r.weekday,
             start_time: r.start_time.slice(0, 5),
             end_time: r.end_time.slice(0, 5),
-            mode: r.mode,
           }))}
           initialOverrides={overrides.map((o) => ({
             id: o.id,
