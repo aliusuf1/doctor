@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { NumberedSection } from "@/components/marketing/numbered-section";
-import { ButtonLink } from "@/components/ui/button";
 import { HOW_IT_WORKS, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,6 +25,12 @@ export default function ConsultationPage() {
             need an in-person examination, a procedure or an investigation — your
             dermatologist will tell you clearly when that is the case.
           </p>
+          <Link
+            href={site.bookHref}
+            className="btn btn-primary mt-8 px-9 py-4 text-[0.95rem]"
+          >
+            Book a consultation <ArrowRight size={17} />
+          </Link>
         </div>
       </section>
 
@@ -102,11 +108,27 @@ export default function ConsultationPage() {
         eyebrow="Afterwards"
         title="A plan you can actually follow."
         intro="After the consultation your dermatologist shares a written plan: the working diagnosis, what to do, what to expect and when to follow up. Prescriptions are issued where appropriate."
-      >
-        <ButtonLink href="/doctors">
-          Find a specialist <ArrowRight size={16} />
-        </ButtonLink>
-      </NumberedSection>
+      />
+
+      {/* Closing CTA */}
+      <section className="border-t border-line bg-panel py-20 md:py-28">
+        <div className="shell flex flex-col items-center gap-7 text-center">
+          <h2 className="display text-[2.2rem] sm:text-[2.8rem] md:text-[3.2rem]">
+            Ready to book?
+          </h2>
+          <p className="prose-body max-w-md text-[1.05rem]">
+            See {site.name}&rsquo;s real availability, pick a time that suits
+            you, and get an instant confirmation with a secure video link.
+          </p>
+          <Link
+            href={site.bookHref}
+            className="btn btn-primary px-12 py-5 text-[1.05rem]"
+          >
+            Book a consultation <ArrowRight size={20} />
+          </Link>
+          <p className="text-xs text-ink-faint">{site.legal.notEmergency}</p>
+        </div>
+      </section>
     </>
   );
 }

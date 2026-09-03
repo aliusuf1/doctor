@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
 import { CARE_AREAS, CARE_AREA_DETAIL, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -57,9 +55,6 @@ export default function ConditionsPage() {
             Describe it briefly when you request an appointment. Your
             dermatologist will assess it properly during the consultation.
           </p>
-          <ButtonLink href="/doctors">
-            Find a specialist <ArrowRight size={16} />
-          </ButtonLink>
         </div>
       </section>
     </>
