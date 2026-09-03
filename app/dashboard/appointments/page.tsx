@@ -23,6 +23,7 @@ export default async function AppointmentsPage({
     sp.filter === "cancelled"
       ? sp.filter
       : "upcoming";
+  const openId = typeof sp.open === "string" ? sp.open : null;
 
   let rows: (AppointmentRow & { patient: PatientRow | null })[] = [];
   let pulse = { total: 0, pending: 0, latest: null as string | null };
@@ -119,6 +120,7 @@ export default async function AppointmentsPage({
         ) : (
           <AppointmentsTable
             timezone={account.doctor.timezone}
+            initialOpenId={openId}
             rows={rows.map((r) => ({
               id: r.id,
               startsAt: r.starts_at,

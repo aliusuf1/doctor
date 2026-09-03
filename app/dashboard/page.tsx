@@ -195,27 +195,32 @@ export default async function DashboardOverview() {
         ) : (
           <ul className="mt-4 divide-y divide-line rounded-lg border border-line bg-paper">
             {upcoming.map((a) => (
-              <li
-                key={a.id}
-                className="flex items-center justify-between px-5 py-3 text-sm"
-              >
-                <span>
-                  {DateTime.fromISO(a.starts_at)
-                    .setZone(doctor.timezone)
-                    .toFormat("ccc d LLL, h:mm a")}
-                </span>
-                <span className="text-ink-faint">
-                  {a.mode === "online" ? "Online" : "In person"}
-                </span>
-                <span
-                  className={`badge ${
-                    a.status === "confirmed"
-                      ? "border-ok bg-ok-tint text-ok"
-                      : "border-warn bg-warn-tint text-warn"
-                  }`}
+              <li key={a.id}>
+                <Link
+                  href={`/dashboard/appointments?open=${a.id}`}
+                  className="flex items-center justify-between gap-4 px-5 py-3 text-sm transition-colors hover:bg-cream"
                 >
-                  {a.status === "confirmed" ? "Confirmed" : "Pending payment"}
-                </span>
+                  <span className="font-medium">
+                    {DateTime.fromISO(a.starts_at)
+                      .setZone(doctor.timezone)
+                      .toFormat("ccc d LLL, h:mm a")}
+                  </span>
+                  <span className="text-ink-faint">
+                    {a.mode === "online" ? "Online" : "In person"}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={`badge ${
+                        a.status === "confirmed"
+                          ? "border-ok bg-ok-tint text-ok"
+                          : "border-warn bg-warn-tint text-warn"
+                      }`}
+                    >
+                      {a.status === "confirmed" ? "Confirmed" : "Pending payment"}
+                    </span>
+                    <ArrowRight size={14} className="text-ink-faint" />
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>

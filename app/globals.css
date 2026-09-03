@@ -175,7 +175,8 @@
   }
 
   /* eyebrow: EVIDENCE-LED DERMATOLOGY */
-  .eyebrow {
+  .eyebrow,
+  .label {
     font-family: var(--font-sans);
     font-size: 0.625rem;
     font-weight: 700;

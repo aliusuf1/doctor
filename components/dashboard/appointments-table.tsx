@@ -40,11 +40,13 @@ const STATUS_CLS: Record<string, string> = {
 export function AppointmentsTable({
   rows,
   timezone,
+  initialOpenId = null,
 }: {
   rows: Row[];
   timezone: string;
+  initialOpenId?: string | null;
 }) {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(initialOpenId);
 
   return (
     <div className="overflow-hidden rounded-lg border border-line bg-paper">
